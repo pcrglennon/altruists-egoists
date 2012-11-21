@@ -11,6 +11,7 @@ public class AETextField extends JTextField {
 	setText(defaultStr);
     }
     
+    //Construct an empty AETextField
     public AETextField() {
 	this("");
     }
@@ -26,11 +27,15 @@ public class AETextField extends JTextField {
     
     private class AEDocument extends PlainDocument {
 	
-	private final Pattern AE = Pattern.compile("[ae]");
+	//Regular expression - matches "A", "E", "a", or "e"
+	private final Pattern AE = Pattern.compile("[AE]|[ae]");
 	
+	//PlainDocument method - 
+	//insert the input string into the textField IF it matches the AE
+	//pattern AND the textField is empty
 	@Override
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-	    if(str != null && AE.matcher(str).matches() && getLength() < 1) {
+	    if(str != null && AE.matcher(str).matches()) {
 		super.insertString(offs, str.toUpperCase(), a);
 	    }
 	}
