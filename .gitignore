@@ -1,4 +1,7 @@
-*.class
+# Ignore the build folder
+build/
+# Ignore local copies of java files
+*.java~
 
 # Package Files #
 *.jar
