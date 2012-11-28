@@ -1,6 +1,6 @@
 
 public class Agent {
-	private int personality; //0-none,1-ego,2-altruist//personality for the next generation
+	private int personality, tempPersonality; //0-none,1-ego,2-altruist
 	private double curPayoff; //payoff of Agent this generation
 
 	public Agent(int personality){
@@ -33,5 +33,19 @@ public class Agent {
 	 */
 	public void setCurPayoff(double curVal) {
 		this.curPayoff = curVal;
+	}
+
+	/**
+	 * @return the tempPersonality
+	 */
+	public int getTempPersonality() {
+		return tempPersonality;
+	}
+
+	/**
+	 * @param tempPersonality the tempPersonality to set
+	 */
+	public void setTempPersonality(int tempPersonality) {
+		this.tempPersonality = tempPersonality;
 	}
 }

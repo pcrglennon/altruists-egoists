@@ -1,13 +1,25 @@
 import java.util.LinkedList;
 import java.util.Random;
 
+
+
+/**
+ * ISSUES: 
+ * 		Print out to file
+ * 		Fix the Change printouts (they are fucking nuttzz)
+ * 		Get the Change 'divide by 0' problem worked out
+ * 		Make sure the math is correct
+ * 
+ * @author ClintFrank
+ *
+ */
 public class Circle {
-	private LinkedList<Agent> community, tempAdjacents;; //circular linked list used for return if normType is true //list that stores current adjacents
-	private int comSize; //size of the 2D array//cost of being Altruistic
+	private LinkedList<Agent> community; //circular linked list used for return if normType is true //list that stores current adjacents
+	private int comSize, searchSize; //size of the 2D array//size of searching radius. ex. 1 means one individual on each side, 2 means two on each side etc.
 	private double cost; //cost of altruism
-	
+	private String fileString;
 	//history for user to look through
-	private int generations;
+	private int generations, altCountOld, altGroupCountOld, altCountNew, altGroupCountNew;
 	private int curGeneration;
 	private int[][] comPersonalityHistory;
 	private double[][] comPayoffHistory;
@@ -20,10 +32,20 @@ public class Circle {
 	 * @param altNum
 	 * @param avgAltSize
 	 */
-	public void gridInitialize(int comSize, double cost, int altNum, int avgAltSize, int generations){
+	public void gridInitialize(int comSize, double cost, int altNum, int avgAltSize, int generations, int searchSize){
+		this.fileString = "Community Size: "+comSize+"\n"+
+						  "Cost of Altruism: "+cost+	
+						  "\n\nAltruists\n"+
+						  "Starting Altruists: "+altNum+"\n"+
+						  "Average Group Size: "+avgAltSize+"\n\nEgoists\n"+
+						  "Starting Egoists: "+(comSize-altNum)+"\n"+
+						  "Average Group Size: "+((comSize-altNum)/(altNum/avgAltSize))+"\n\n";		  
 		this.comSize = comSize;
 		this.cost = cost;
-		curGeneration = 0;
+		this.searchSize = searchSize;
+		curGeneration = altCountOld = altGroupCountOld = 0; //to keep track of variables for each generation
+		altCountNew = altNum;
+		altGroupCountNew = altNum/avgAltSize;
 		this.generations = generations;
 		comPersonalityHistory = new int[generations][comSize];
 		comPayoffHistory = new double[generations][comSize];
@@ -31,59 +53,83 @@ public class Circle {
 		generateCommunity(altNum,avgAltSize);
 	}
 	
-	public void andHereWeGo(){
+	/**
+	 * Runs multiple generations (using oneGeneration()) as specified by user
+	 */
+	public void runEpoch(){
 		while (curGeneration!=generations){
+			fileString+="Generation "+curGeneration+":\n";
+//			System.out.println("\nAltruists\n"+
+//					"Individuals: "+altCountNew+(curGeneration==0?"":"          Change: "+(altCountNew-altCountOld))+"\n"+
+//					"Groups: "+altGroupCountNew+(curGeneration==0?"":"                Change: "+(altGroupCountNew-altGroupCountOld))+"\n"+
+//					"Average Group Size: "+(altCountNew/altGroupCountNew)+//(curGeneration==0?"":"     Change: "+((altCountNew/altGroupCountNew)-(altCountOld/altGroupCountOld)))+"\n\nEgoists\n"+
+//					"Individuals: "+(comSize-altCountNew)+(curGeneration==0?"":"           Change: "+((comSize-altCountNew)-(comSize-altCountOld)))+"\n"+
+//					"Groups: "+altGroupCountNew+(curGeneration==0?"":"                 Change: "+((comSize-altGroupCountNew)-(comSize-altGroupCountOld))+"\n"+
+//					"Average Group Size: "+((comSize-altCountNew)/(altGroupCountNew))));//+(curGeneration==0?"":"    Change: "+((comSize-altCountNew)/(altGroupCountNew)-((comSize-altCountOld)/(altGroupCountOld)))+"\n\n")));
+			altGroupCountNew = altCountNew = 0;
+			altCountOld = altCountNew;
+			altGroupCountOld = altGroupCountNew;
 			for (Agent a : community){
 				System.out.print(a.getPersonality());
+				fileString+=a.getPersonality();
 			}
 			System.out.println();
+			fileString+="\n";
 			oneGeneration();
 			curGeneration++;
 		}
-		
+		System.out.println(fileString);
 	}
 	
+	
 	/**
-	 * Runs one generation of this shiiiit
+	 * Runs one generation through value assignment and personality switching
 	 */
 	public void oneGeneration(){
-		int[] tempAdj = new int[2]; //our temp array that holds adjacent individuals
-		boolean planFlag = false;  //true when changing plans 
-		int i=0;
-		while (true){ //for each individual in the community
-			//Setting the value for each Agent
-			tempAdj = getAdjacent(i); //get the adjacent neighbors
-			double tempVal = 0;          //Initialize temporary variables
-			int tempPersonality = community.get(i).getPersonality();
+		//assign all values
+		for (int i=0;i<community.size();i++){  
+			int tempPersonality = community.get(i).getPersonality(); //get out current personality
 			comPersonalityHistory[curGeneration][i] = tempPersonality; //records current strategy for history
-			for (int neighbor:tempAdj){  //add value for each neighbor
-				tempVal+=interactValue(tempPersonality,neighbor); //add the value for current neighbor
-			}
-			community.get(i).setCurPayoff(tempPersonality==2 ? tempVal-cost:tempVal); //value is set
-			comPayoffHistory[curGeneration][i]=(tempPersonality==2 ? tempVal-cost:tempVal); //saved for history
-			//System.out.println("Indiv "+i+" Person|Val: "+community.get(i).getPersonality()+"|"+community.get(i).getCurPayoff());
-			//Planning
-			if (planFlag || i>=2){
-				double[] values = {community.get(ind(i-1)).getCurPayoff(),community.get(ind(i-2)).getCurPayoff(),community.get(i).getCurPayoff()};   //1/2 parallel arrays: for values
-				int[] personalities = {community.get(ind(i-1)).getPersonality(),community.get(ind(i-2)).getPersonality(),community.get(i).getPersonality()}; //2/2 parallel arrays: for personalities
-				double maxVal = values[0];
-				int bestPersonality = personalities[0];
-				for (int j=1;j<values.length;j++){
-					if (maxVal<values[j]){ //if a new max is found
-						maxVal=values[j]; //it is set in value
-						bestPersonality=personalities[j]; //then set with personality
-					}
+			community.get(i).setCurPayoff(getPayoff(i));  //gets payoff and sets value for current dude.
+		}
+		//Calculate changes
+		double altVal, egoVal, altNum, egoNum; //set necessary variables for average findings
+		for (int i=0;i<community.size();i++){
+			altVal = egoVal = altNum = egoNum = 0;
+			for (int j=(i-searchSize);j<=(i+searchSize);j++){
+				System.out.println(j+"("+ind(j)+"): "+community.get(ind(j)).getPersonality());
+				if (community.get(ind(j)).getPersonality()==2){ //if the current individual is an altruist
+					altVal+=community.get(ind(j)).getCurPayoff();  //add payoff
+					altNum++;
 				}
-				community.get(ind(i-1)).setPersonality(bestPersonality);
+				else {  //if the current individual is an egoist 
+					egoVal+=community.get(ind(j)).getCurPayoff();
+					egoNum++;
+				}
 			}
-			i++;
-			if(i==comSize){
-				planFlag = true;
-				i=0;
+			System.out.println(curGeneration+"-"+i+" P|V: "+community.get(i).getPersonality()+"|"+community.get(i).getCurPayoff());
+			System.out.println("From: "+(ind(i-searchSize))+" To: "+(ind(i+searchSize)));
+			System.out.println("altNum: "+altNum);
+			System.out.println("altVal: "+altVal);
+			System.out.println("egoNum: "+egoNum);
+			System.out.println("egoVal: "+egoVal);
+			System.out.println("altVal/altNum: "+altVal/altNum);
+			System.out.println("egoVal/egoNum: "+egoVal/egoNum);
+			if (altNum==0){  //if no altruists
+				System.out.println("Egoist\n");
+				community.get(i).setTempPersonality(1); //set to egoist
 			}
-			if (planFlag && i>=2){
-				break;
+			else if (egoNum==0){ //if no egoists
+				System.out.println("Altruist\n");
+				community.get(i).setTempPersonality(2); //set to altruist
 			}
+			else{
+				System.out.println((altVal/altNum>egoVal/egoNum?"Altruist\n":"Egoist\n"));
+				community.get(i).setTempPersonality((altVal/altNum>egoVal/egoNum?2:1));
+			}
+		}
+		for (Agent a: community){
+			a.setPersonality(a.getTempPersonality());
 		}
 	}
 	
@@ -91,21 +137,10 @@ public class Circle {
 		if (i<0){
 			return comSize+i;
 		}
-		else if (i>comSize){
+		else if (i>=comSize){
 			return i%comSize;
 		}
 		return i;
-	}
-	
-	/**
-	 * given two individuals, this function returns self's payoff NOT INCLUDING ALTRUIST COST
-	 * 
-	 * @param self
-	 * @param partner
-	 * @return
-	 */
-	public double interactValue(int self, int partner){
-		return (partner==1? 0:1);
 	}
 	
 	/**
@@ -135,9 +170,9 @@ public class Circle {
 		int egoNum = comSize - altNum;
 		int numAltGroups = altNum/avgAltSize; //using the average size of Altruistic groups, we get the number of groups we will need
 		int numEgoGroups = numAltGroups;  //this number of groups is the same as the Egoist number of groups we need
-		int avgEgoSize = egoNum/numEgoGroups; //average size of Egoist groups
-		int maxAltChange = (int) (avgAltSize/1.5); //maximum deviation from averageAltSize
-		int maxEgoChange = (int) (avgEgoSize/1.5);  //maximum deviation from averageEgoSize
+		int avgEgoSize = egoNum/(numEgoGroups==0?1:numEgoGroups); //average size of Egoist groups
+		int maxAltChange = (int) (avgAltSize/2); //maximum deviation from averageAltSize
+		int maxEgoChange = (int) (avgEgoSize/2);  //maximum deviation from averageEgoSize
 		int tempAdd;
 		while (altNum>0 || egoNum>0){ //while loop that adds groups to 
 			//ALTRUIST ADDING
@@ -195,27 +230,28 @@ public class Circle {
 		return comPayoffHistory[gen];
 	}
 	
-//	public String getGenerationData(int gen){
-//		String genData = "";
-//		
-//	}
-	
 	/**
-	 * gets the forward and backward adjacent players to inputed individual
+	 * Gets adjacent individuals and gives back their value-2 for actual value and -.5 if you are an altruist
 	 * 
-	 * @param row
+	 * Altruists = 2
+	 * Ego = 1
+	 * 
+	 * EXE = 2
+	 * EXA or AXE = 3
+	 * AXA = 4
+	 * 
+	 * If you subtract 2 from this value, you get the actual appraisal. 
+	 * 
+	 * @param pos
 	 * @return
 	 */
-	public int[] getAdjacent(int row){
-		int[] tempAdj = new int[2];
-		tempAdj[0] = community.get((row==0?comSize-1:row)).getPersonality();  //try to get the previous element
-		tempAdj[1] = community.get((row+1)%comSize).getPersonality();  //try to get the next element
-		return tempAdj;
+	public double getPayoff(int pos){
+		return (community.get(ind(pos-1)).getPersonality() + community.get(ind(pos+1)).getPersonality())-2 + (community.get(pos).getPersonality()==2? -cost : 0);
 	}
 	
 	public static void main(String[] args){
 		Circle test = new Circle();
-		test.gridInitialize(200,.6,30,2,20);
-		test.andHereWeGo();
+		test.gridInitialize(100,.4,50,5,10,2);
+		test.runEpoch();
 	}
 }
