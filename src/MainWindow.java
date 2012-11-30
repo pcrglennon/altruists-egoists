@@ -32,10 +32,9 @@ public class MainWindow extends JFrame implements ActionListener {
     //The main content panel
     Container panel;
 
-    //The linked list representing the population
-    Circle population;
-
+    JPanel mainPanel;
     PopulationPanel populationPanel;
+    PopConfigPanel popConfigPanel;
     
     //The panel containing the buttons
     JPanel buttonPanel;
@@ -47,8 +46,6 @@ public class MainWindow extends JFrame implements ActionListener {
 
     public MainWindow() {
 	super();
-	
-	population = new Circle();
 	
 	//Run the initialization stuff in a new thread
 	SwingUtilities.invokeLater(new Runnable() {
@@ -66,14 +63,20 @@ public class MainWindow extends JFrame implements ActionListener {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 	panel = getContentPane();
+
+	mainPanel = new JPanel();
+	mainPanel.setLayout(new GridLayout(2,0));
+	populationPanel = new PopulationPanel();
+	//add populationPanel to the center of the window
+	mainPanel.add(populationPanel);
+
+	popConfigPanel = new PopConfigPanel();
+	mainPanel.add(popConfigPanel);
+	panel.add(mainPanel, BorderLayout.CENTER);
 	
 	setupButtonPanel();
 	//Add buttonPanel to the left side of the window
-	panel.add(buttonPanel, BorderLayout.LINE_START);
-
-	populationPanel = new PopulationPanel();
-	//add populationPanel to the center of the window
-	panel.add(populationPanel, BorderLayout.CENTER);
+	panel.add(buttonPanel, BorderLayout.PAGE_END);
 
 	gameLogPanel = new GameLogPanel();
 	gameLogPanel.setPreferredSize(Config.SIDE_PANEL_PREF_SIZE);
@@ -88,8 +91,7 @@ public class MainWindow extends JFrame implements ActionListener {
 
     private void setupButtonPanel() {
 	buttonPanel = new JPanel();
-	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-	buttonPanel.setPreferredSize(Config.SIDE_PANEL_PREF_SIZE);
+	buttonPanel.setLayout(new FlowLayout());
 	
 	startB = new JButton("Start");
 	resetB = new JButton("Reset");

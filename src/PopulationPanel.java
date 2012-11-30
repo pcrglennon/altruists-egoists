@@ -1,5 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.Rectangle;
 
 import java.util.ArrayList;
@@ -11,17 +13,19 @@ public class PopulationPanel extends JPanel {
     private Circle gameRunner;
     private Agent[] community;
 
-    //400 by 400 square
-    private int[] dimensions = {0, 0, 400, 400};
-    private int offset = 10;
-    //textfield size
-    private int tfSize = 20;
-
     //Contains the "boundaries" of each AETextField (represents an individual in the
     //population), so that they may be placed in an absolute position
     private ArrayList<Rectangle> popBounds;
     //Contains the population
     private ArrayList<AETextField> visualPopulation;
+
+    private PopConfigPanel popConfigPanel;
+
+    //400 by 400 square
+    private int[] dimensions = {0, 0, 400, 400};
+    private int offset = 10;
+    //textfield size
+    private int tfSize = 20;
 
     public PopulationPanel() {
 	super();
@@ -29,7 +33,7 @@ public class PopulationPanel extends JPanel {
 	gameRunner = new Circle();
 	//This means each component will be added w/ ABSOLUTE position (actual xy coords)
 	setLayout(null);
-	setPreferredSize(new Dimension(dimensions[2], dimensions[3]));
+	setPreferredSize(Config.POP_PANEL_PREF_SIZE);
 
 	popBounds = new ArrayList<Rectangle>(Config.POP_SIZE);
 	visualPopulation = new ArrayList<AETextField>(Config.POP_SIZE);
@@ -105,31 +109,3 @@ public class PopulationPanel extends JPanel {
     }
 }
 
-/**
- * Container class
- *
- * Holds an AETextField representing an agent, and the agent itself
- */
-class VisualAgent {
-
-    public Agent agent;
-    public AETextField tf;
-
-    public VisualAgent(Agent agent, AETextField tf) {
-	this.agent = agent;
-	this.tf = tf;
-    }
-
-    public void updateAgentPersonality() {
-	if(tf.getText().equals("A")) {
-	    System.out.println("SETTING PERSONALITY TO A");
-	    agent.setPersonality(2);
-	    System.out.println("AGENT PERSONALITY >> " + agent.getPersonality());
-	} else if(tf.getText().equals("E")) {
-	    System.out.println("SETTING PERSONALITY TO E");
-	    agent.setPersonality(1);
-	    System.out.println("AGENT PERSONALITY >> " + agent.getPersonality());
-	}
-    }
-
-}

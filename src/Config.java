@@ -13,8 +13,10 @@ public class Config {
 
     //Temporary
     public final static int POP_SIZE = 4;
-    
+
     public final static Dimension MAIN_WINDOW_SIZE = new Dimension(750, 750);
+    public final static Dimension POP_PANEL_PREF_SIZE = new Dimension(400, 400);
+    public final static Dimension POP_CONFIG_PANEL_PREF_SIZE = new Dimension(400, 400);
 
     public final static Dimension SIDE_PANEL_PREF_SIZE = new Dimension(MAIN_WINDOW_SIZE.width /3, MAIN_WINDOW_SIZE.height);
 
