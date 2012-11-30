@@ -10,6 +10,9 @@ import java.awt.Font;
  */
 
 public class Config {
+
+    //Temporary
+    public final static int POP_SIZE = 4;
     
     public final static Dimension MAIN_WINDOW_SIZE = new Dimension(750, 750);
 

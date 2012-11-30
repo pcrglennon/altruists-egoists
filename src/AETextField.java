@@ -35,7 +35,7 @@ public class AETextField extends JTextField {
 	//pattern AND the textField is empty
 	@Override
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-	    if(str != null && AE.matcher(str).matches()) {
+	    if(str != null && AE.matcher(str).matches() && getLength() < 1) {
 		super.insertString(offs, str.toUpperCase(), a);
 	    }
 	}

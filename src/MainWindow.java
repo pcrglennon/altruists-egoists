@@ -32,16 +32,23 @@ public class MainWindow extends JFrame implements ActionListener {
     //The main content panel
     Container panel;
 
+    //The linked list representing the population
+    Circle population;
+
     PopulationPanel populationPanel;
     
     //The panel containing the buttons
     JPanel buttonPanel;
     JButton startB;
+    JButton resetB;
+    JButton quitB;
 
     GameLogPanel gameLogPanel;
 
     public MainWindow() {
 	super();
+	
+	population = new Circle();
 	
 	//Run the initialization stuff in a new thread
 	SwingUtilities.invokeLater(new Runnable() {
@@ -85,14 +92,33 @@ public class MainWindow extends JFrame implements ActionListener {
 	buttonPanel.setPreferredSize(Config.SIDE_PANEL_PREF_SIZE);
 	
 	startB = new JButton("Start");
+	resetB = new JButton("Reset");
+	resetB.setEnabled(false);
+	quitB = new JButton("Quit");
+	
 	startB.addActionListener(this);
+	resetB.addActionListener(this);
+	quitB.addActionListener(this);
+	
 	buttonPanel.add(startB);
+	buttonPanel.add(resetB);
+	buttonPanel.add(quitB);
     }
     
     public void actionPerformed(ActionEvent e) {
 	if(e.getSource() == startB) {
 	    //"Start Game" code goes here
-	    System.out.println("Start Clicked");
+	    populationPanel.runEpoch();
+	    startB.setEnabled(false);
+	    resetB.setEnabled(true);
+	}
+	else if(e.getSource() == resetB) {
+	    populationPanel.reset();
+	    startB.setEnabled(true);
+	    resetB.setEnabled(false);
+	}
+	else if(e.getSource() == quitB) {
+	    System.exit(0);
 	}
     }
 
