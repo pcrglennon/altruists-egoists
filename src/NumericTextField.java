@@ -14,11 +14,18 @@ class NumericTextField extends JTextField {
     //Also used as the number of columns in the text field
     private int maxDigits;
 
-    public NumericTextField(int maxDigits) {
+    private boolean autofill;
+
+    public NumericTextField(int maxDigits, String input) {
 	super();
 	this.maxDigits = maxDigits;
-	setDocument(createDefaultModel());
 	setColumns(maxDigits);
+	setText(input);
+	autofill = false;
+    }
+
+    public NumericTextField(int maxDigits) {
+	this(maxDigits, "");
     }
 
     @Override
@@ -36,9 +43,12 @@ class NumericTextField extends JTextField {
 	
 	@Override
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-	    if(str != null && DIGITS.matcher(str).matches() && getLength() + str.length() <= maxDigits) {
+	    if(autofill) {
+		super.insertString(offs, str, a);
+	    }
+	    else if(str != null && DIGITS.matcher(str).matches() && getLength() + str.length() <= maxDigits) {
 		super.insertString(offs, str, a);
 	    }
 	}
-    }
+    }    
 }

@@ -115,9 +115,14 @@ public class MainWindow extends JFrame implements ActionListener {
 	    resetB.setEnabled(true);
 	}
 	else if(e.getSource() == resetB) {
-	    populationPanel.reset();
-	    startB.setEnabled(true);
-	    resetB.setEnabled(false);
+	    String errors = popConfigPanel.checkInputs();
+	    if(errors.equals("")) {
+		populationPanel.reset(popConfigPanel.getConfigInfo());
+		startB.setEnabled(true);
+		resetB.setEnabled(false);
+	    } else {
+		JOptionPane.showMessageDialog(this, errors);
+	    }
 	}
 	else if(e.getSource() == quitB) {
 	    System.exit(0);

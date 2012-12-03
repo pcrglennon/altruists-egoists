@@ -11,9 +11,6 @@ import java.awt.Font;
 
 public class Config {
 
-    //Temporary
-    public final static int POP_SIZE = 4;
-
     public final static Dimension MAIN_WINDOW_SIZE = new Dimension(750, 750);
     public final static Dimension POP_PANEL_PREF_SIZE = new Dimension(400, 400);
     public final static Dimension POP_CONFIG_PANEL_PREF_SIZE = new Dimension(400, 400);
@@ -21,5 +18,12 @@ public class Config {
     public final static Dimension SIDE_PANEL_PREF_SIZE = new Dimension(MAIN_WINDOW_SIZE.width /3, MAIN_WINDOW_SIZE.height);
 
     public final static Font LABEL_FONT = new Font("SansSerif", Font.BOLD, 17);
+
+    public final static int DEF_POP_SIZE = 4;
+    public final static double DEF_ALT_COST = 0.4;
+    public final static int DEF_NUM_GEN = 10;
+    public final static int DEF_ALT_NUM = 2;
+    public final static int DEF_AVG_ALT_SIZE = 1;
+    public final static int DEF_SEARCH_SIZE = 1;
 
 }

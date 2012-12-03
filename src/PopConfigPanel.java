@@ -6,18 +6,49 @@ import javax.swing.*;
 
 public class PopConfigPanel extends JPanel {
 
-    private NumericTextField popSizeTF, altCostTF, numGenTF, altNumTF, avgAltSizeTF, searchSizeTF;
+    private NumericTextField popSizeTF, altNumTF, avgAltSizeTF, numGenTF, searchSizeTF;
+    private FloatTextField altCostTF;
 
     public PopConfigPanel() {
 	super();
 	setPreferredSize(Config.POP_CONFIG_PANEL_PREF_SIZE);
-	popSizeTF = new NumericTextField(2);
-	altCostTF = new NumericTextField(2);
-	numGenTF = new NumericTextField(3);
-	altNumTF = new NumericTextField(2);
-	avgAltSizeTF = new NumericTextField(2);
-	searchSizeTF = new NumericTextField(1);
+	popSizeTF = new NumericTextField(2, "" + Config.DEF_POP_SIZE);
+	altCostTF = new FloatTextField(3, "" + Config.DEF_ALT_COST);
+	altNumTF = new NumericTextField(3, "" + Config.DEF_ALT_NUM);
+	avgAltSizeTF = new NumericTextField(3, "" + Config.DEF_AVG_ALT_SIZE);
+	numGenTF = new NumericTextField(3, "" + Config.DEF_NUM_GEN);
+	searchSizeTF = new NumericTextField(2, "" + Config.DEF_SEARCH_SIZE);
 	addComponentsToPanel();
+    }
+
+    //CURRENTLY - NO CONFIGURABLE POP SIZE
+    public double[] getConfigInfo() {
+	double[] configInfo = {Double.parseDouble(popSizeTF.getText()), Double.parseDouble(altCostTF.getText()), Double.parseDouble(altNumTF.getText()), Double.parseDouble(avgAltSizeTF.getText()), Double.parseDouble(numGenTF.getText()), Double.parseDouble(searchSizeTF.getText())};
+	return configInfo;
+    }
+
+    //Returns "" if no error
+    public String checkInputs() {
+	StringBuilder errors = new StringBuilder();
+	if(popSizeTF.getText().equals("")) {
+	    errors.append("Population Size Text Field is Empty!\n");
+	}
+	if(altCostTF.getText().equals("")) {
+	    errors.append("Altruism Cost Text Field is Empty!\n");
+	}
+	if(altNumTF.getText().equals("")) {
+	    errors.append("Number of Altruists Text Field is Empty!\n");
+	}	
+	if(avgAltSizeTF.getText().equals("")) {
+	    errors.append("Average Altruist Community Size Text Field is Empty!\n");
+	}
+	if(numGenTF.getText().equals("")) {
+	    errors.append("Number of Generations Text Field is Empty!\n");
+	}
+	if(searchSizeTF.getText().equals("")) {
+	    errors.append("Search Size Text Field is Empty!\n");
+	}
+	return errors.toString();
     }
 
     private void addComponentsToPanel() {

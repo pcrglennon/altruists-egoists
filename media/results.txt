@@ -1,0 +1,81 @@
+Community Size: 4
+Cost of Altruism: 0.4
+
+Altruists
+Starting Altruists: 2
+Average Group Size: 1
+
+Egoists
+Starting Egoists: 2
+Average Group Size: 1
+
+Generation 0:
+
+Altruists
+Individuals: 2          Change: 0
+Groups: 2                Change: 0
+Average Group Size: 1     Change: 0
+
+Egoists
+Individuals: 2           Change: 0
+Groups: 2                 Change: 0
+Average Group Size: 1    Change: 0
+
+aEaE
+
+Generation 1:
+
+Altruists
+Individuals: 0          Change: -2
+Groups: 0                Change: -2
+Average Group Size: 0     Change: 2
+
+Egoists
+Individuals: 4           Change: 2
+Groups: 0                 Change: 2
+Average Group Size: 1    Change: 0
+
+EEEE
+
+Generation 2:
+
+Altruists
+Individuals: 0          Change: 0
+Groups: 0                Change: 0
+Average Group Size: 0     Change: 0
+
+Egoists
+Individuals: 4           Change: 0
+Groups: 0                 Change: 0
+Average Group Size: 1    Change: 0
+
+EEEE
+
+Generation 3:
+
+Altruists
+Individuals: 0          Change: 0
+Groups: 0                Change: 0
+Average Group Size: 0     Change: 0
+
+Egoists
+Individuals: 4           Change: 0
+Groups: 0                 Change: 0
+Average Group Size: 1    Change: 0
+
+EEEE
+
+Generation 4:
+
+Altruists
+Individuals: 0          Change: 0
+Groups: 0                Change: 0
+Average Group Size: 0     Change: 0
+
+Egoists
+Individuals: 4           Change: 0
+Groups: 0                 Change: 0
+Average Group Size: 1    Change: 0
+
+EEEE
+

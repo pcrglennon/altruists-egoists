@@ -19,8 +19,6 @@ public class PopulationPanel extends JPanel {
     //Contains the population
     private ArrayList<AETextField> visualPopulation;
 
-    private PopConfigPanel popConfigPanel;
-
     //400 by 400 square
     private int[] dimensions = {0, 0, 400, 400};
     private int offset = 10;
@@ -35,11 +33,11 @@ public class PopulationPanel extends JPanel {
 	setLayout(null);
 	setPreferredSize(Config.POP_PANEL_PREF_SIZE);
 
-	popBounds = new ArrayList<Rectangle>(Config.POP_SIZE);
-	visualPopulation = new ArrayList<AETextField>(Config.POP_SIZE);
+	popBounds = new ArrayList<Rectangle>(Config.DEF_POP_SIZE);
+	visualPopulation = new ArrayList<AETextField>(Config.DEF_POP_SIZE);
 
-	gameRunner.gridInitialize(Config.POP_SIZE, .4, 2, 1, 5, 1);
-	community = gameRunner.getCommunity().toArray(new Agent[Config.POP_SIZE]);
+	gameRunner.gridInitialize(Config.DEF_POP_SIZE, Config.DEF_ALT_COST, Config.DEF_ALT_NUM, Config.DEF_AVG_ALT_SIZE, Config.DEF_NUM_GEN, Config.DEF_SEARCH_SIZE);
+	community = gameRunner.getCommunity().toArray(new Agent[Config.DEF_POP_SIZE]);
 	for(Agent a: community) {
 	    AETextField tf = new AETextField((a.getPersonality() == 1) ? "E" : "A");
 	    visualPopulation.add(tf);
@@ -55,9 +53,10 @@ public class PopulationPanel extends JPanel {
 	updateTextFields();
     }
 
-    public void reset() {
-	gameRunner.gridInitialize(Config.POP_SIZE, .4, 2, 1, 5, 1);
-	community = gameRunner.getCommunity().toArray(new Agent[Config.POP_SIZE]);
+    //New pop size?
+    public void reset(double[] configInfo) {
+	gameRunner.gridInitialize((int)configInfo[0], configInfo[1], (int)configInfo[2], (int)configInfo[3], (int)configInfo[4], (int)configInfo[5]);
+	community = gameRunner.getCommunity().toArray(new Agent[Config.DEF_POP_SIZE]);
 	for(int i = 0; i < community.length; i++) {
 	    Agent a = community[i];
 	    visualPopulation.get(i).setText((a.getPersonality() == 1) ? "E" : "A");
