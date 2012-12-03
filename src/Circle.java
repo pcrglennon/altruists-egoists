@@ -1,3 +1,5 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -5,10 +7,7 @@ import java.util.Random;
 
 /**
  * ISSUES: 
- * 		Print out to file
- * 		Fix the Change printouts (they are fucking nuttzz)
- * 		Get the Change 'divide by 0' problem worked out
- * 		Make sure the math is correct
+ * 		reset variables
  * 
  * @author ClintFrank
  *
@@ -19,10 +18,10 @@ public class Circle {
 	private double cost; //cost of altruism
 	private String fileString;
 	//history for user to look through
-	private int generations, altCountOld, altGroupCountOld, altCountNew, altGroupCountNew;
+	private int generations, altCountOld, altGroupCountOld, altCountNew, altGroupCountNew, egoGroupCountOld, egoGroupCountNew;
+	private int altNumChange, altGroupChange, altAvgGroupChange, egoNumChange, egoGroupChange, egoAvgGroupChange;
 	private int curGeneration;
-	private int[][] comPersonalityHistory;
-	private double[][] comPayoffHistory;
+	private String[] comPersonalityHistory;
 	
 	/**
 	 * Called before each run to initialize grid variables, size, type, population data
@@ -43,12 +42,11 @@ public class Circle {
 		this.comSize = comSize;
 		this.cost = cost;
 		this.searchSize = searchSize;
-		curGeneration = altCountOld = altGroupCountOld = 0; //to keep track of variables for each generation
 		altCountNew = altNum;
 		altGroupCountNew = altNum/avgAltSize;
+		egoGroupCountNew = (comSize-altNum)/((comSize-altNum)/(altNum/avgAltSize));
 		this.generations = generations;
-		comPersonalityHistory = new int[generations][comSize];
-		comPayoffHistory = new double[generations][comSize];
+		comPersonalityHistory = new String[generations];
 		community = new LinkedList<Agent>();
 		generateCommunity(altNum,avgAltSize);
 	}
@@ -57,30 +55,52 @@ public class Circle {
 	 * Runs multiple generations (using oneGeneration()) as specified by user
 	 */
 	public void runEpoch(){
+		curGeneration = altCountOld = altGroupCountOld = egoGroupCountOld = 0; //to keep track of variables for each generation
+		comPersonalityHistory = new String[generations];
+		altCountOld = altCountNew;
+		altGroupCountOld = altGroupCountNew;
+		egoGroupCountOld = altGroupCountNew;
+		
 		while (curGeneration!=generations){
 			fileString+="Generation "+curGeneration+":\n";
-//			System.out.println("\nAltruists\n"+
-//					"Individuals: "+altCountNew+(curGeneration==0?"":"          Change: "+(altCountNew-altCountOld))+"\n"+
-//					"Groups: "+altGroupCountNew+(curGeneration==0?"":"                Change: "+(altGroupCountNew-altGroupCountOld))+"\n"+
-//					"Average Group Size: "+(altCountNew/altGroupCountNew)+//(curGeneration==0?"":"     Change: "+((altCountNew/altGroupCountNew)-(altCountOld/altGroupCountOld)))+"\n\nEgoists\n"+
-//					"Individuals: "+(comSize-altCountNew)+(curGeneration==0?"":"           Change: "+((comSize-altCountNew)-(comSize-altCountOld)))+"\n"+
-//					"Groups: "+altGroupCountNew+(curGeneration==0?"":"                 Change: "+((comSize-altGroupCountNew)-(comSize-altGroupCountOld))+"\n"+
-//					"Average Group Size: "+((comSize-altCountNew)/(altGroupCountNew))));//+(curGeneration==0?"":"    Change: "+((comSize-altCountNew)/(altGroupCountNew)-((comSize-altCountOld)/(altGroupCountOld)))+"\n\n")));
-			altGroupCountNew = altCountNew = 0;
-			altCountOld = altCountNew;
+			altNumChange = altCountNew-altCountOld;
+			altGroupChange = altGroupCountNew-altGroupCountOld;
+			altAvgGroupChange = (altGroupCountNew==0?altGroupCountOld:(altCountNew/altGroupCountNew)-(altCountOld/altGroupCountOld));
+			egoNumChange = (comSize-altCountNew)-(comSize-altCountOld);
+			egoGroupChange = egoGroupCountNew-egoGroupCountOld;
+			egoAvgGroupChange = (egoGroupCountNew==0?egoGroupCountOld:(comSize-altCountNew)/(egoGroupCountNew)-((comSize-altCountOld)/(egoGroupCountOld)));
+			fileString+="\nAltruists\n"+
+					"Individuals: "+altCountNew+"          Change: "+altNumChange+"\n"+
+					"Groups: "+altGroupCountNew+"                Change: "+altGroupChange+"\n"+
+					"Average Group Size: "+(altCountNew/(altGroupCountNew==0?1:altGroupCountNew))+"     Change: "+(altAvgGroupChange)+"\n\nEgoists\n"+
+					"Individuals: "+(comSize-altCountNew)+"           Change: "+(egoNumChange)+"\n"+
+					"Groups: "+altGroupCountNew+"                 Change: "+(egoGroupChange)+"\n"+
+					"Average Group Size: "+((comSize-altCountNew)/(egoGroupCountNew==0?1:egoGroupCountNew)+"    Change: "+(egoAvgGroupChange)+"\n\n");
+			egoAvgGroupChange = egoGroupChange = egoNumChange = altAvgGroupChange=altGroupChange = altNumChange=0; //reset change variables
+			altCountOld = altCountNew; 
 			altGroupCountOld = altGroupCountNew;
+			egoGroupCountOld = egoGroupCountNew;
+			altCountNew = altGroupCountNew = egoGroupCountNew = 0;
 			for (Agent a : community){
 				System.out.print(a.getPersonality());
-				fileString+=a.getPersonality();
+				fileString+=(a.getPersonality()==2?"a":"E");
 			}
-			System.out.println();
-			fileString+="\n";
+			fileString+="\n\n";
 			oneGeneration();
 			curGeneration++;
 		}
+		try{
+			// Create file 
+			FileWriter fstream = new FileWriter("results.txt");
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(fileString);
+			//Close the output stream
+			out.close();
+		}catch (Exception e){//Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
 		System.out.println(fileString);
 	}
-	
 	
 	/**
 	 * Runs one generation through value assignment and personality switching
@@ -89,7 +109,7 @@ public class Circle {
 		//assign all values
 		for (int i=0;i<community.size();i++){  
 			int tempPersonality = community.get(i).getPersonality(); //get out current personality
-			comPersonalityHistory[curGeneration][i] = tempPersonality; //records current strategy for history
+			comPersonalityHistory[curGeneration]+=tempPersonality==2?"a":"E"; //records current strategy for history
 			community.get(i).setCurPayoff(getPayoff(i));  //gets payoff and sets value for current dude.
 		}
 		//Calculate changes
@@ -97,7 +117,7 @@ public class Circle {
 		for (int i=0;i<community.size();i++){
 			altVal = egoVal = altNum = egoNum = 0;
 			for (int j=(i-searchSize);j<=(i+searchSize);j++){
-				System.out.println(j+"("+ind(j)+"): "+community.get(ind(j)).getPersonality());
+				//System.out.println(j+"("+ind(j)+"): "+community.get(ind(j)).getPersonality());
 				if (community.get(ind(j)).getPersonality()==2){ //if the current individual is an altruist
 					altVal+=community.get(ind(j)).getCurPayoff();  //add payoff
 					altNum++;
@@ -107,29 +127,50 @@ public class Circle {
 					egoNum++;
 				}
 			}
-			System.out.println(curGeneration+"-"+i+" P|V: "+community.get(i).getPersonality()+"|"+community.get(i).getCurPayoff());
-			System.out.println("From: "+(ind(i-searchSize))+" To: "+(ind(i+searchSize)));
-			System.out.println("altNum: "+altNum);
-			System.out.println("altVal: "+altVal);
-			System.out.println("egoNum: "+egoNum);
-			System.out.println("egoVal: "+egoVal);
-			System.out.println("altVal/altNum: "+altVal/altNum);
-			System.out.println("egoVal/egoNum: "+egoVal/egoNum);
+//			System.out.println(curGeneration+"-"+i+" P|V: "+community.get(i).getPersonality()+"|"+community.get(i).getCurPayoff());
+//			System.out.println("From: "+(ind(i-searchSize))+" To: "+(ind(i+searchSize)));
+//			System.out.println("altNum: "+altNum);
+//			System.out.println("altVal: "+altVal);
+//			System.out.println("egoNum: "+egoNum);
+//			System.out.println("egoVal: "+egoVal);
+//			System.out.println("altVal/altNum: "+altVal/altNum);
+//			System.out.println("egoVal/egoNum: "+egoVal/egoNum);
 			if (altNum==0){  //if no altruists
-				System.out.println("Egoist\n");
+				//System.out.println("Egoist\n");
 				community.get(i).setTempPersonality(1); //set to egoist
 			}
 			else if (egoNum==0){ //if no egoists
-				System.out.println("Altruist\n");
+				//System.out.println("Altruist\n");
 				community.get(i).setTempPersonality(2); //set to altruist
 			}
 			else{
-				System.out.println((altVal/altNum>egoVal/egoNum?"Altruist\n":"Egoist\n"));
+				//System.out.println((altVal/altNum>egoVal/egoNum?"Altruist\n":"Egoist\n"));
 				community.get(i).setTempPersonality((altVal/altNum>egoVal/egoNum?2:1));
 			}
 		}
+		int prevPers = community.get(comSize-1).getPersonality(); //for comparison
 		for (Agent a: community){
 			a.setPersonality(a.getTempPersonality());
+			if (a.getPersonality()==2){
+				altCountNew++;
+			}
+			if (prevPers!=a.getPersonality()){
+				if (a.getPersonality()==2){
+					altGroupCountNew++;
+				}
+				else{
+					egoGroupCountNew++;
+				}
+			}
+			if (altGroupCountNew==0){
+				if (community.get(0).getPersonality()==2){
+					altGroupCountNew++;
+				}
+				else{
+					egoGroupCountNew++;
+				}
+			}
+			prevPers = a.getPersonality();
 		}
 	}
 	
@@ -205,29 +246,24 @@ public class Circle {
 	}
 	
 	/**
+	 * Returns the community
+	 * @return
+	 */
+	public LinkedList<Agent> getCommunity(){
+		return community;
+	}
+	
+	/**
 	 * returns a generation of personalities
 	 * 
 	 * @param gen
 	 * @return
 	 */
-	public int[] getGenerationPersonalities(int gen){
+	public String getGenerationPersonalities(int gen){
 		if (gen>generations-1 || gen<0){
 			return null;
 		}
 		return comPersonalityHistory[gen];
-	}
-	
-	/**
-	 * returns a generation of payoffs
-	 * 
-	 * @param gen
-	 * @return
-	 */
-	public double[] getGenerationPayoffs(int gen){
-		if (gen>generations-1 || gen<0){
-			return null;
-		}
-		return comPayoffHistory[gen];
 	}
 	
 	/**
@@ -251,7 +287,7 @@ public class Circle {
 	
 	public static void main(String[] args){
 		Circle test = new Circle();
-		test.gridInitialize(100,.4,50,5,10,2);
+		test.gridInitialize(2000,.5,100,20,10,1);
 		test.runEpoch();
 	}
 }
