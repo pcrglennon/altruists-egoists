@@ -11,6 +11,7 @@ public class VisualAgent extends JButton {
     public VisualAgent(int personality, int index) {
 	this.personality = personality;
 	this.index = index;
+	//setText("" + (index+1));
 	if(personality == 1) {
 	    setBackground(Color.RED);
 	} else {

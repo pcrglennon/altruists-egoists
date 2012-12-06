@@ -45,7 +45,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	visualAgents = new ArrayList<VisualAgent>(Config.DEF_POP_SIZE);
 
 	gameRunner.gridInitialize(Config.DEF_POP_SIZE, Config.DEF_ALT_COST, Config.DEF_ALT_NUM, Config.DEF_AVG_ALT_SIZE, Config.DEF_NUM_GEN, Config.DEF_SEARCH_SIZE);
-	community = gameRunner.getCommunity().toArray(new Agent[Config.DEF_POP_SIZE]);
+	community = gameRunner.getCommunity();
 	for(int i = 0; i < community.length; i++) {
 	    VisualAgent va = new VisualAgent(community[i].getPersonality(), i);
 	    va.addActionListener(this);
@@ -66,9 +66,10 @@ public class PopulationPanel extends JPanel implements ActionListener {
 
     public void reset(double[] configInfo) {
 	gameRunner.gridInitialize((int)configInfo[0], configInfo[1], (int)configInfo[2], (int)configInfo[3], (int)configInfo[4], (int)configInfo[5]);
-	community = gameRunner.getCommunity().toArray(new Agent[Config.DEF_POP_SIZE]);
+	community = gameRunner.getCommunity();
 	//If the population size has not changed
 	if(community.length == visualAgents.size()) {
+	    System.out.println("com length is SAME");
 	    for(VisualAgent va: visualAgents) {
 		va.updateColor(community[va.index].getPersonality());
 	    }

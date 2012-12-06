@@ -91,7 +91,7 @@ public class Circle {
 		}
 		try{
 			// Create file 
-			FileWriter fstream = new FileWriter("results.txt");
+			FileWriter fstream = new FileWriter("media/results.txt");
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(fileString);
 			//Close the output stream
@@ -249,8 +249,8 @@ public class Circle {
 	 * Returns the community
 	 * @return
 	 */
-	public LinkedList<Agent> getCommunity(){
-		return community;
+	public Agent[] getCommunity() {
+		    return community.toArray(new Agent[community.size()]);
 	}
 	
 	/**
