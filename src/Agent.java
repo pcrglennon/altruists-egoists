@@ -21,6 +21,14 @@ public class Agent {
 		this.personality = personality;
 	}
 
+    public void swapPersonality() {
+	if(personality == 1) {
+	    personality = 2;
+	} else if(personality == 2) {
+	    personality = 1;
+	}
+    }
+
 	/**
 	 * @return the curPayoff
 	 */

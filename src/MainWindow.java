@@ -39,6 +39,7 @@ public class MainWindow extends JFrame implements ActionListener {
     //The panel containing the buttons
     JPanel buttonPanel;
     JButton startB;
+    JButton oneGenB;
     JButton resetB;
     JButton quitB;
 
@@ -64,16 +65,19 @@ public class MainWindow extends JFrame implements ActionListener {
 	
 	panel = getContentPane();
 
-	mainPanel = new JPanel();
-	mainPanel.setLayout(new GridLayout(2,0));
-	populationPanel = new PopulationPanel();
-	//add populationPanel to the center of the window
-	mainPanel.add(populationPanel);
+	//mainPanel = new JPanel();
+	//mainPanel.setLayout(new GridLayout(2,0));
+	
+	
 
 	popConfigPanel = new PopConfigPanel();
-	mainPanel.add(popConfigPanel);
-	panel.add(mainPanel, BorderLayout.CENTER);
+	add(popConfigPanel, BorderLayout.LINE_START);
+	//panel.add(mainPanel, BorderLayout.CENTER);
 	
+	populationPanel = new PopulationPanel();
+	//add populationPanel to the center of the window
+	add(populationPanel, BorderLayout.CENTER);
+
 	setupButtonPanel();
 	//Add buttonPanel to the left side of the window
 	panel.add(buttonPanel, BorderLayout.PAGE_END);
@@ -94,15 +98,18 @@ public class MainWindow extends JFrame implements ActionListener {
 	buttonPanel.setLayout(new FlowLayout());
 	
 	startB = new JButton("Start");
+	oneGenB = new JButton("One Gen");
 	resetB = new JButton("Reset");
 	resetB.setEnabled(false);
 	quitB = new JButton("Quit");
 	
 	startB.addActionListener(this);
+	oneGenB.addActionListener(this);
 	resetB.addActionListener(this);
 	quitB.addActionListener(this);
 	
 	buttonPanel.add(startB);
+	buttonPanel.add(oneGenB);
 	buttonPanel.add(resetB);
 	buttonPanel.add(quitB);
     }
@@ -112,6 +119,10 @@ public class MainWindow extends JFrame implements ActionListener {
 	    //"Start Game" code goes here
 	    populationPanel.runEpoch();
 	    startB.setEnabled(false);
+	    resetB.setEnabled(true);
+	}
+	else if(e.getSource() == oneGenB) {
+	    populationPanel.runOneGeneration();
 	    resetB.setEnabled(true);
 	}
 	else if(e.getSource() == resetB) {
