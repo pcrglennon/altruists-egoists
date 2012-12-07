@@ -46,11 +46,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 
 	gameRunner.gridInitialize(Config.DEF_POP_SIZE, Config.DEF_ALT_COST, Config.DEF_ALT_NUM, Config.DEF_AVG_ALT_SIZE, Config.DEF_NUM_GEN, Config.DEF_SEARCH_SIZE);
 	community = gameRunner.getCommunity();
-	for(int i = 0; i < community.length; i++) {
-	    VisualAgent va = new VisualAgent(community[i].getPersonality(), i);
-	    va.addActionListener(this);
-	    visualAgents.add(va);
-	}
+	
 	layoutPopulation();
     }
 
@@ -69,7 +65,6 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	community = gameRunner.getCommunity();
 	//If the population size has not changed
 	if(community.length == visualAgents.size()) {
-	    System.out.println("com length is SAME");
 	    for(VisualAgent va: visualAgents) {
 		va.updateColor(community[va.index].getPersonality());
 	    }
@@ -78,7 +73,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	else {
 	    //Delete all VisualAgents
 	    removeAll();
-	    layoutPopulation();
+	    revalidate();
+	    repaint();
+	    //layoutPopulation();
 	}
     }
 
@@ -88,6 +85,13 @@ public class PopulationPanel extends JPanel implements ActionListener {
      */
     private void layoutPopulation() {
 	popBounds.clear();
+
+	visualAgents.clear();
+	for(int i = 0; i < community.length; i++) {
+	    VisualAgent va = new VisualAgent(community[i].getPersonality(), i);
+	    va.addActionListener(this);
+	    visualAgents.add(va);
+	}
 	//Absolute positioning coords
 	int n = community.length;
 	for(int i = 0; i < n; i++) {

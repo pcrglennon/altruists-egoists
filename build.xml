@@ -1,4 +1,4 @@
-<project name="313_Project" basedir="." default="main">
+<project name="313_Final" basedir="." default="main">
 
   <property name="src.dir" value="src"/>
   <property name="build.dir" value="build"/>

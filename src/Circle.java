@@ -38,13 +38,13 @@ public class Circle {
 						  "Starting Altruists: "+altNum+"\n"+
 						  "Average Group Size: "+avgAltSize+"\n\nEgoists\n"+
 						  "Starting Egoists: "+(comSize-altNum)+"\n"+
-						  "Average Group Size: "+((comSize-altNum)/(altNum/avgAltSize))+"\n\n";		  
+						  "Average Group Size: "+((comSize-altNum)/((altNum/avgAltSize)==0?1:(altNum/avgAltSize)))+"\n\n";		  
 		this.comSize = comSize;
 		this.cost = cost;
 		this.searchSize = searchSize;
 		altCountNew = altNum;
 		altGroupCountNew = altNum/avgAltSize;
-		egoGroupCountNew = (comSize-altNum)/((comSize-altNum)/(altNum/avgAltSize));
+		egoGroupCountNew = (comSize-altNum)/(((comSize-altNum)/((altNum/avgAltSize)==0?1:(altNum/avgAltSize)))==0?1:((comSize-altNum)/((altNum/avgAltSize)==0?1:(altNum/avgAltSize))));
 		this.generations = generations;
 		comPersonalityHistory = new String[generations];
 		community = new LinkedList<Agent>();
@@ -60,15 +60,9 @@ public class Circle {
 		altCountOld = altCountNew;
 		altGroupCountOld = altGroupCountNew;
 		egoGroupCountOld = altGroupCountNew;
-		
 		while (curGeneration!=generations){
 			fileString+="Generation "+curGeneration+":\n";
-			altNumChange = altCountNew-altCountOld;
-			altGroupChange = altGroupCountNew-altGroupCountOld;
-			altAvgGroupChange = (altGroupCountNew==0?altGroupCountOld:(altCountNew/altGroupCountNew)-(altCountOld/altGroupCountOld));
-			egoNumChange = (comSize-altCountNew)-(comSize-altCountOld);
-			egoGroupChange = egoGroupCountNew-egoGroupCountOld;
-			egoAvgGroupChange = (egoGroupCountNew==0?egoGroupCountOld:(comSize-altCountNew)/(egoGroupCountNew)-((comSize-altCountOld)/(egoGroupCountOld)));
+			calcAndPrint();
 			fileString+="\nAltruists\n"+
 					"Individuals: "+altCountNew+"          Change: "+altNumChange+"\n"+
 					"Groups: "+altGroupCountNew+"                Change: "+altGroupChange+"\n"+
@@ -100,6 +94,39 @@ public class Circle {
 			System.err.println("Error: " + e.getMessage());
 		}
 		System.out.println(fileString);
+	}
+	
+	public void calcAndPrint(){
+		int prevPers = community.get(comSize-1).getPersonality(); //for comparison
+		for (Agent a: community){
+			a.setPersonality(a.getTempPersonality());
+			if (a.getPersonality()==2){
+				altCountNew++;
+			}
+			if (prevPers!=a.getPersonality()){
+				if (a.getPersonality()==2){
+					altGroupCountNew++;
+				}
+				else{
+					egoGroupCountNew++;
+				}
+			}
+			if (altGroupCountNew==0){
+				if (community.get(0).getPersonality()==2){
+					altGroupCountNew++;
+				}
+				else{
+					egoGroupCountNew++;
+				}
+			}
+			prevPers = a.getPersonality();
+		}
+		altNumChange = altCountNew-altCountOld;
+		altGroupChange = altGroupCountNew-altGroupCountOld;
+		altAvgGroupChange = (altGroupCountNew==0?altGroupCountOld:(altCountNew/altGroupCountNew)-(altCountOld/(altGroupCountOld==0?1:altGroupCountOld)));
+		egoNumChange = (comSize-altCountNew)-(comSize-altCountOld);
+		egoGroupChange = egoGroupCountNew-egoGroupCountOld;
+		egoAvgGroupChange = (egoGroupCountNew==0?egoGroupCountOld:(comSize-altCountNew)/(egoGroupCountNew)-((comSize-altCountOld)/((egoGroupCountOld)==0?1:(egoGroupCountOld))));
 	}
 	
 	/**
@@ -147,30 +174,6 @@ public class Circle {
 				//System.out.println((altVal/altNum>egoVal/egoNum?"Altruist\n":"Egoist\n"));
 				community.get(i).setTempPersonality((altVal/altNum>egoVal/egoNum?2:1));
 			}
-		}
-		int prevPers = community.get(comSize-1).getPersonality(); //for comparison
-		for (Agent a: community){
-			a.setPersonality(a.getTempPersonality());
-			if (a.getPersonality()==2){
-				altCountNew++;
-			}
-			if (prevPers!=a.getPersonality()){
-				if (a.getPersonality()==2){
-					altGroupCountNew++;
-				}
-				else{
-					egoGroupCountNew++;
-				}
-			}
-			if (altGroupCountNew==0){
-				if (community.get(0).getPersonality()==2){
-					altGroupCountNew++;
-				}
-				else{
-					egoGroupCountNew++;
-				}
-			}
-			prevPers = a.getPersonality();
 		}
 	}
 	
@@ -246,11 +249,11 @@ public class Circle {
 	}
 	
 	/**
-	 * Returns the community
+	 * Returns the community in an array
 	 * @return
 	 */
-	public Agent[] getCommunity() {
-		    return community.toArray(new Agent[community.size()]);
+	public Agent[] getCommunity(){
+	    return community.toArray(new Agent[community.size()]);
 	}
 	
 	/**
@@ -287,7 +290,13 @@ public class Circle {
 	
 	public static void main(String[] args){
 		Circle test = new Circle();
-		test.gridInitialize(2000,.5,100,20,10,1);
+		test.gridInitialize(10,.5,10,2,1,1);
+		System.out.println("ONE-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
 		test.runEpoch();
+		System.out.println("TWO-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
+		test.gridInitialize(100,.5,10,2,1,1);
+		System.out.println("THR-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
+		test.runEpoch();
+		System.out.println("FOU-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
 	}
 }
