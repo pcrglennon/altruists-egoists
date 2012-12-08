@@ -56,4 +56,8 @@ public class Agent {
 	public void setTempPersonality(int tempPersonality) {
 		this.tempPersonality = tempPersonality;
 	}
+
+    public String toString() {
+	return "Agent personality > " + ((personality == 1) ? "E" : "A");
+    }
 }

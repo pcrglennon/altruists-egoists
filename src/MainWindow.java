@@ -74,8 +74,8 @@ public class MainWindow extends JFrame implements ActionListener {
 	add(popConfigPanel, BorderLayout.LINE_START);
 	//panel.add(mainPanel, BorderLayout.CENTER);
 	
-	populationPanel = new PopulationPanel();
 	//add populationPanel to the center of the window
+	populationPanel = new PopulationPanel(popConfigPanel.getConfigInfo());
 	add(populationPanel, BorderLayout.CENTER);
 
 	setupButtonPanel();
@@ -128,7 +128,12 @@ public class MainWindow extends JFrame implements ActionListener {
 	else if(e.getSource() == resetB) {
 	    String errors = popConfigPanel.checkInputs();
 	    if(errors.equals("")) {
-		populationPanel.reset(popConfigPanel.getConfigInfo());
+		panel.remove(populationPanel);
+		populationPanel = new PopulationPanel(popConfigPanel.getConfigInfo());
+		panel.add(populationPanel, BorderLayout.CENTER);
+		panel.revalidate();
+		panel.repaint();
+		//populationPanel.reset(popConfigPanel.getConfigInfo());
 		startB.setEnabled(true);
 		resetB.setEnabled(false);
 	    } else {

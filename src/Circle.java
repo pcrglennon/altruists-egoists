@@ -13,7 +13,7 @@ import java.util.Random;
  *
  */
 public class Circle {
-	private LinkedList<Agent> community; //circular linked list used for return if normType is true //list that stores current adjacents
+    private LinkedList<Agent> community; //circular linked list used for return if normType is true //list that stores current adjacents
 	private int comSize, searchSize; //size of the 2D array//size of searching radius. ex. 1 means one individual on each side, 2 means two on each side etc.
 	private double cost; //cost of altruism
 	private String fileString;
@@ -76,7 +76,7 @@ public class Circle {
 			egoGroupCountOld = egoGroupCountNew;
 			altCountNew = altGroupCountNew = egoGroupCountNew = 0;
 			for (Agent a : community){
-				System.out.print(a.getPersonality());
+			    System.out.println(a);
 				fileString+=(a.getPersonality()==2?"a":"E");
 			}
 			fileString+="\n\n";
@@ -249,11 +249,11 @@ public class Circle {
 	}
 	
 	/**
-	 * Returns the community in an array
+	 * Returns the community
 	 * @return
 	 */
-	public Agent[] getCommunity(){
-	    return community.toArray(new Agent[community.size()]);
+	public LinkedList<Agent> getCommunity(){
+	    return community;
 	}
 	
 	/**
@@ -291,12 +291,12 @@ public class Circle {
 	public static void main(String[] args){
 		Circle test = new Circle();
 		test.gridInitialize(10,.5,10,2,1,1);
-		System.out.println("ONE-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
+		System.out.println("ONE-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().size());
 		test.runEpoch();
-		System.out.println("TWO-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
+		System.out.println("TWO-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().size());
 		test.gridInitialize(100,.5,10,2,1,1);
-		System.out.println("THR-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
+		System.out.println("THR-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().size());
 		test.runEpoch();
-		System.out.println("FOU-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().length);
+		System.out.println("FOU-----------------------------------------------------------------------------------------------------------------------------"+test.getCommunity().size());
 	}
 }

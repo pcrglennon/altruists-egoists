@@ -1,19 +1,16 @@
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.*;
 
 public class PopulationPanel extends JPanel implements ActionListener {
 
     private Circle gameRunner;
-    private Agent[] community;
+    private LinkedList<Agent> community;
 
     //Contains VisualAgents - JButtons that represent an agent
     private ArrayList<VisualAgent> visualAgents;
@@ -33,7 +30,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
     private int centerX = (dimensions[2] - dimensions[0])/2;
     private int centerY = (dimensions[3] - dimensions[1])/2;
 
-    public PopulationPanel() {
+    public PopulationPanel(double[] configInfo) {
 	super();
 
 	gameRunner = new Circle();
@@ -44,7 +41,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	popBounds = new ArrayList<Rectangle>(Config.DEF_POP_SIZE);
 	visualAgents = new ArrayList<VisualAgent>(Config.DEF_POP_SIZE);
 
-	gameRunner.gridInitialize(Config.DEF_POP_SIZE, Config.DEF_ALT_COST, Config.DEF_ALT_NUM, Config.DEF_AVG_ALT_SIZE, Config.DEF_NUM_GEN, Config.DEF_SEARCH_SIZE);
+	gameRunner.gridInitialize((int)configInfo[0], configInfo[1], (int)configInfo[2], (int)configInfo[3], (int)configInfo[4], (int)configInfo[5]);
 	community = gameRunner.getCommunity();
 	
 	layoutPopulation();
@@ -60,40 +57,20 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	updateVisualAgents();
     }
 
-    public void reset(double[] configInfo) {
-	gameRunner.gridInitialize((int)configInfo[0], configInfo[1], (int)configInfo[2], (int)configInfo[3], (int)configInfo[4], (int)configInfo[5]);
-	community = gameRunner.getCommunity();
-	//If the population size has not changed
-	if(community.length == visualAgents.size()) {
-	    for(VisualAgent va: visualAgents) {
-		va.updateColor(community[va.index].getPersonality());
-	    }
-	}
-	//Otherwise, delete everything and re-layout
-	else {
-	    //Delete all VisualAgents
-	    removeAll();
-	    revalidate();
-	    repaint();
-	    //layoutPopulation();
-	}
-    }
-
     /**
      * Layout each individual along the circle
      *
      */
     private void layoutPopulation() {
 	popBounds.clear();
-
 	visualAgents.clear();
-	for(int i = 0; i < community.length; i++) {
-	    VisualAgent va = new VisualAgent(community[i].getPersonality(), i);
+	for(int i = 0; i < community.size(); i++) {
+	    VisualAgent va = new VisualAgent(community.get(i).getPersonality(), i);
 	    va.addActionListener(this);
 	    visualAgents.add(va);
 	}
 	//Absolute positioning coords
-	int n = community.length;
+	int n = community.size();
 	for(int i = 0; i < n; i++) {
 	    double cos = Math.cos(Math.toRadians(((double)i/n)*360));
 	    double sin = Math.sin(Math.toRadians(((double)i/n)*360));
@@ -109,7 +86,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 
     private void updateVisualAgents() {
 	for(VisualAgent va: visualAgents) {
-	    va.updateColor(community[va.index].getPersonality());
+	    va.updateColor(community.get(va.index).getPersonality());
 	}
     }
 
@@ -117,7 +94,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	if(e.getSource() instanceof VisualAgent) {
 	    VisualAgent va = (VisualAgent)e.getSource();
 	    va.swapColor();
-	    community[va.index].swapPersonality();
+	    System.out.println("SWAPPING PERSONALITY for " + community.get(va.index));
+	    community.get(va.index).swapPersonality();
+	    System.out.println(community.get(va.index));
 	}
     }
 

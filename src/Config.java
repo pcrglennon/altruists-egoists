@@ -19,7 +19,7 @@ public class Config {
 
     public final static Font LABEL_FONT = new Font("SansSerif", Font.BOLD, 17);
 
-    public final static int DEF_POP_SIZE = 12;
+    public final static int DEF_POP_SIZE = 5;
     public final static double DEF_ALT_COST = 0.4;
     public final static int DEF_NUM_GEN = 2;
     public final static int DEF_ALT_NUM = 2;
