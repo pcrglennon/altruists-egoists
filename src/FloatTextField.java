@@ -11,6 +11,8 @@ class FloatTextField extends JTextField {
 
     private boolean autofill = true;
 
+    private final Pattern FULL_FLOAT = Pattern.compile("^\\d\\.\\d+$|^\\.\\d+$|^\\d$");
+
     public FloatTextField(int maxDigits, String input) {
 	super();
 	this.maxDigits = maxDigits;
@@ -21,6 +23,17 @@ class FloatTextField extends JTextField {
 
     public FloatTextField(int maxDigits) {
 	this(maxDigits, "");
+    }
+    
+    public String validateInput(String tfName) {
+	if(getText().equals("")) {
+	    return tfName + ": Text Field is Empty!\n";
+	}
+	else if(FULL_FLOAT.matcher(getText()).matches()) {
+	    return "";
+	} else {
+	    return tfName + ": Invalid Format (max 9.99)\n";
+	}
     }
     
     @Override
@@ -34,14 +47,13 @@ class FloatTextField extends JTextField {
     
     private class DecimalDocument extends PlainDocument {
 	
-	private final Pattern DIGITS = Pattern.compile("[\\d*.]");
-	
+	private final Pattern DIGITS_POINTS = Pattern.compile("[\\d*.]");
 	@Override
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 	    if(autofill) {
 		super.insertString(offs, str, a);
 	    }
-	    else if(str != null && DIGITS.matcher(str).matches() && getLength() + str.length() <= maxDigits + 1) {
+	    else if(str != null && DIGITS_POINTS.matcher(str).matches() && getLength() + str.length() <= maxDigits + 1) {
 		super.insertString(offs, str, a);
 	    }
 	}

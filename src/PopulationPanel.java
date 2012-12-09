@@ -12,6 +12,11 @@ public class PopulationPanel extends JPanel implements ActionListener {
     private Circle gameRunner;
     private LinkedList<Agent> community;
 
+    private JPanel buttonPanel;
+    private JButton nextGenB;
+    private JButton prevGenB;
+    private JButton runB;
+
     //Contains VisualAgents - JButtons that represent an agent
     private ArrayList<VisualAgent> visualAgents;
     //Contains the "boundaries" of each VisualAgent, so that they may be
@@ -38,6 +43,8 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	setLayout(null);
 	setPreferredSize(Config.POP_PANEL_PREF_SIZE);
 
+	setupButtonPanel();
+
 	popBounds = new ArrayList<Rectangle>(Config.DEF_POP_SIZE);
 	visualAgents = new ArrayList<VisualAgent>(Config.DEF_POP_SIZE);
 
@@ -55,6 +62,34 @@ public class PopulationPanel extends JPanel implements ActionListener {
     public void runOneGeneration() {
 	gameRunner.oneGeneration();
 	updateVisualAgents();
+    }
+
+    private void setupButtonPanel() {
+	buttonPanel = new JPanel();
+	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+	    
+	Rectangle bpBounds = new Rectangle((dimensions[0] + 20), (dimensions[1] + dimensions[3] + 50), dimensions[3], 100);
+	buttonPanel.setBounds(bpBounds);
+
+	nextGenB = new JButton("Next Generation");
+	prevGenB = new JButton("Prev. Generation");
+	runB = new JButton("Run All Generations");
+	runB.setAlignmentX(CENTER_ALIGNMENT);
+
+	nextGenB.addActionListener(this);
+	prevGenB.addActionListener(this);
+	runB.addActionListener(this);
+
+	JPanel flowLayoutPanel = new JPanel();
+	flowLayoutPanel.setLayout(new FlowLayout());
+	flowLayoutPanel.add(nextGenB);
+	flowLayoutPanel.add(prevGenB);
+	
+	buttonPanel.add(Box.createVerticalStrut(30));
+	buttonPanel.add(flowLayoutPanel);
+	buttonPanel.add(runB);
+	
+	add(buttonPanel);
     }
 
     /**
@@ -94,9 +129,16 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	if(e.getSource() instanceof VisualAgent) {
 	    VisualAgent va = (VisualAgent)e.getSource();
 	    va.swapColor();
-	    System.out.println("SWAPPING PERSONALITY for " + community.get(va.index));
 	    community.get(va.index).swapPersonality();
-	    System.out.println(community.get(va.index));
+	} else if(e.getSource().equals(nextGenB)) {
+	    gameRunner.oneGeneration();
+	    updateVisualAgents();
+	} else if(e.getSource().equals(prevGenB)) {
+	    //PREV GENERATION
+	    updateVisualAgents();
+	} else if(e.getSource().equals(runB)) {
+	    gameRunner.runEpoch();
+	    updateVisualAgents();
 	}
     }
 

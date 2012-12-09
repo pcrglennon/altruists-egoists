@@ -27,20 +27,16 @@ import javax.swing.*;
  */
 
 //JFrame is the "Window" class in Swing, so we extend it to use its functionality
-public class MainWindow extends JFrame implements ActionListener {
+public class MainWindow extends JFrame {
 
     //The main content panel
     Container panel;
 
-    JPanel mainPanel;
     PopulationPanel populationPanel;
     PopConfigPanel popConfigPanel;
     
     //The panel containing the buttons
     JPanel buttonPanel;
-    JButton startB;
-    JButton oneGenB;
-    JButton resetB;
     JButton quitB;
 
     GameLogPanel gameLogPanel;
@@ -65,14 +61,8 @@ public class MainWindow extends JFrame implements ActionListener {
 	
 	panel = getContentPane();
 
-	//mainPanel = new JPanel();
-	//mainPanel.setLayout(new GridLayout(2,0));
-	
-	
-
 	popConfigPanel = new PopConfigPanel();
 	add(popConfigPanel, BorderLayout.LINE_START);
-	//panel.add(mainPanel, BorderLayout.CENTER);
 	
 	//add populationPanel to the center of the window
 	populationPanel = new PopulationPanel(popConfigPanel.getConfigInfo());
@@ -93,56 +83,33 @@ public class MainWindow extends JFrame implements ActionListener {
 	setVisible(true);
     }
 
-    private void setupButtonPanel() {
-	buttonPanel = new JPanel();
-	buttonPanel.setLayout(new FlowLayout());
-	
-	startB = new JButton("Start");
-	oneGenB = new JButton("One Gen");
-	resetB = new JButton("Reset");
-	resetB.setEnabled(false);
-	quitB = new JButton("Quit");
-	
-	startB.addActionListener(this);
-	oneGenB.addActionListener(this);
-	resetB.addActionListener(this);
-	quitB.addActionListener(this);
-	
-	buttonPanel.add(startB);
-	buttonPanel.add(oneGenB);
-	buttonPanel.add(resetB);
-	buttonPanel.add(quitB);
+    public void resetPopulationPanel() {
+	String errors = popConfigPanel.checkInputs();
+	if(errors.equals("")) {
+	    panel.remove(populationPanel);
+	    populationPanel = new PopulationPanel(popConfigPanel.getConfigInfo());
+	    panel.add(populationPanel, BorderLayout.CENTER);
+	    panel.revalidate();
+	    panel.repaint();
+	} else {
+	    JOptionPane.showMessageDialog(this, errors);
+	}
     }
     
-    public void actionPerformed(ActionEvent e) {
-	if(e.getSource() == startB) {
-	    //"Start Game" code goes here
-	    populationPanel.runEpoch();
-	    startB.setEnabled(false);
-	    resetB.setEnabled(true);
-	}
-	else if(e.getSource() == oneGenB) {
-	    populationPanel.runOneGeneration();
-	    resetB.setEnabled(true);
-	}
-	else if(e.getSource() == resetB) {
-	    String errors = popConfigPanel.checkInputs();
-	    if(errors.equals("")) {
-		panel.remove(populationPanel);
-		populationPanel = new PopulationPanel(popConfigPanel.getConfigInfo());
-		panel.add(populationPanel, BorderLayout.CENTER);
-		panel.revalidate();
-		panel.repaint();
-		//populationPanel.reset(popConfigPanel.getConfigInfo());
-		startB.setEnabled(true);
-		resetB.setEnabled(false);
-	    } else {
-		JOptionPane.showMessageDialog(this, errors);
-	    }
-	}
-	else if(e.getSource() == quitB) {
-	    System.exit(0);
-	}
+    private void setupButtonPanel() {
+	buttonPanel = new JPanel();
+	buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+	quitB = new JButton("Quit");
+
+	quitB.addActionListener(new ActionListener() {
+		
+		public void actionPerformed(ActionEvent e) {
+		    System.exit(0);
+		}
+	    });
+			      
+	buttonPanel.add(quitB);
     }
 
     public static void main(String[] args) {
