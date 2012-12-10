@@ -46,7 +46,7 @@ public class Circle {
 		this.generations = generations;
 		comPersonalityHistory = new String[generations];
 		community = new LinkedList<Agent>();
-		generateCommunity(altNum,avgAltSize);
+		generateCommunity((altNum>comSize?comSize:altNum),avgAltSize);
 	}
 	
 	/**
@@ -236,7 +236,12 @@ public class Circle {
 			//ALTRUIST ADDING
 			if (altNum>0){
 				tempAdd = avgAltSize; //set tempAdd to our average group size
-				tempAdd+= (avgAltSize==1? 0:rand.nextInt(2*maxAltChange) - maxAltChange); //add or subtract a random value less than maxSize
+				try{
+					tempAdd+= (avgAltSize==1? 0:rand.nextInt(2*maxAltChange) - maxAltChange); //add or subtract a random value less than maxSize
+				}
+				catch (Exception e){
+					tempAdd=1;
+				}
 				if (altNum<tempAdd){
 					tempAdd = altNum;
 				}
