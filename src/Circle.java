@@ -133,7 +133,7 @@ public class Circle {
 			if (curGeneration!=0){
 				a.setPersonality(a.getTempPersonality());  //set their personality to the decision they made
 			}
-			comPersonalityHistory[curGeneration]+=a.getPersonality();
+			comPersonalityHistory[curGeneration]+=a.getPersonality()==2?"a":"E";
 			if (a.getPersonality()==2){  //if we find an altruist, we up the altCountNew
 				altCountNew++;
 				//System.out.println("altCountNew: "+altCountNew);
