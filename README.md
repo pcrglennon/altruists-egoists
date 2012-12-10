@@ -1,7 +1,8 @@
 altruists-egoists
 =================
 
-COM 313: Algorithmic Game Theory final project by Peter Glennon and Clint Mullins.
+COM 313: Algorithmic Game Theory final project by [Peter Glennon](http://github.com/pcrglennon)
+ and [Clint Mullins](http://github.com/ClintFMullins)
 
 To run the current version:
 
@@ -9,9 +10,7 @@ To run the current version:
 
 2) In a terminal, navigate to the directory containing the .jar
 
-3) Run "java -jar Altruists_Egoists.jar"
-
-
+3) Run "java -jar Altruists_Egoists.jar"  
 
 
 To build and run the source code:
