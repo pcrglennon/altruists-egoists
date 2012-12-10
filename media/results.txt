@@ -9,59 +9,60 @@ Egoists
 Starting Egoists: 8
 Average Group Size: 4
 
+
+
 Generation 0:
 
 Altruists
-Individuals: 2          Change: 0
-Groups: 2                Change: 0
-Average Group Size: 1     Change: 0
+Individuals: 2 Change: 0
+Groups: 2 Change: 0
+Average Group Size: 1 Change: 0
 
 Egoists
-Individuals: 8           Change: 0
-Groups: 2                 Change: 1
-Average Group Size: 2    Change: -2
+Individuals: 8 Change: 0
+Groups: 2 Change: 0
+Average Group Size: 4 Change: 0
 
-EEEEEEEEEE
+aEEEaEEEEE
 
 Generation 1:
 
 Altruists
-Individuals: 0          Change: -2
-Groups: 0                Change: -2
-Average Group Size: 0     Change: 2
+Individuals: 0 Change: -2
+Groups: 0 Change: -2
+Average Group Size: 0 Change: -1
 
 Egoists
-Individuals: 10           Change: 2
-Groups: 0                 Change: 8
-Average Group Size: 0    Change: -2
+Individuals: 10 Change: 2
+Groups: 0 Change: -1
+Average Group Size: 10 Change: 6
 
 EEEEEEEEEE
 
 Generation 2:
 
 Altruists
-Individuals: 0          Change: 0
-Groups: 0                Change: 0
-Average Group Size: 0     Change: 0
+Individuals: 0 Change: 0
+Groups: 0 Change: 0
+Average Group Size: 0 Change: 0
 
 Egoists
-Individuals: 10           Change: 0
-Groups: 0                 Change: -1
-Average Group Size: 1    Change: 1
+Individuals: 10 Change: 0
+Groups: 0 Change: 0
+Average Group Size: 10 Change: 0
 
 EEEEEEEEEE
 
 Generation 3:
 
 Altruists
-Individuals: 0          Change: 0
-Groups: 0                Change: 0
-Average Group Size: 0     Change: 0
+Individuals: 0 Change: 0
+Groups: 0 Change: 0
+Average Group Size: 0 Change: 0
 
 Egoists
-Individuals: 10           Change: 0
-Groups: 0                 Change: 0
-Average Group Size: 1    Change: 0
+Individuals: 10 Change: 0
+Groups: 0 Change: 0
+Average Group Size: 10 Change: 0
 
 EEEEEEEEEE
-

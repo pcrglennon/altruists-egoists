@@ -11,10 +11,15 @@ public class PopulationPanel extends JPanel implements ActionListener {
 
     private Circle gameRunner;
     private LinkedList<Agent> community;
+    private int curGeneration;
 
     private JPanel buttonPanel;
     private JButton nextGenB;
     private JButton prevGenB;
+    private JButton firstGenB;
+    private JButton lastGenB;
+    private JButton gotoGenB;
+    private NumericTextField gotoGenTF;
     private JButton runB;
 
     //Contains VisualAgents - JButtons that represent an agent
@@ -56,40 +61,84 @@ public class PopulationPanel extends JPanel implements ActionListener {
 
     public void runEpoch() {
 	gameRunner.runEpoch();
+	curGeneration = gameRunner.getCurGeneration();
+	String finalGenPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
 	updateVisualAgents();
+
+	MainWindow mainWindow = (MainWindow)getTopLevelAncestor();
+	mainWindow.updateGameLogPanel(gameRunner.getFileString());
     }
 
-    public void runOneGeneration() {
-	gameRunner.oneGeneration();
-	updateVisualAgents();
+    public void nextGeneration() {
+	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration + 1);
+	updateVisualAgents(genPersonalities);
     }
 
     private void setupButtonPanel() {
 	buttonPanel = new JPanel();
 	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 	    
-	Rectangle bpBounds = new Rectangle((dimensions[0] + 20), (dimensions[1] + dimensions[3] + 50), dimensions[3], 100);
+	Rectangle bpBounds = new Rectangle((dimensions[0] + 20), (dimensions[1] + dimensions[3] + 50), dimensions[3], 250);
 	buttonPanel.setBounds(bpBounds);
 
-	nextGenB = new JButton("Next Generation");
-	prevGenB = new JButton("Prev. Generation");
-	runB = new JButton("Run All Generations");
+	nextGenB = new JButton("Next Gen");
+	prevGenB = new JButton("Prev. Gen");
+	firstGenB = new JButton("First Gen");
+	lastGenB = new JButton("First Gen");
+	gotoGenB = new JButton("Go to Gen #");
+	gotoGenTF = new NumericTextField(3);
+	runB = new JButton("Run");
 	runB.setAlignmentX(CENTER_ALIGNMENT);
 
 	nextGenB.addActionListener(this);
 	prevGenB.addActionListener(this);
+	firstGenB.addActionListener(this);
+	lastGenB.addActionListener(this);
+	gotoGenB.addActionListener(this);
 	runB.addActionListener(this);
 
-	JPanel flowLayoutPanel = new JPanel();
-	flowLayoutPanel.setLayout(new FlowLayout());
-	flowLayoutPanel.add(nextGenB);
-	flowLayoutPanel.add(prevGenB);
+	JPanel panelOne = new JPanel();
+	panelOne.setLayout(new FlowLayout());
+	panelOne.add(nextGenB);
+	panelOne.add(prevGenB);
+
+	JPanel panelTwo = new JPanel();
+	panelTwo.setLayout(new FlowLayout());
+	panelTwo.add(firstGenB);
+	panelTwo.add(lastGenB);
+
+	JPanel panelThree = new JPanel();
+	panelThree.setLayout(new FlowLayout());
+	panelThree.add(gotoGenB);
+	panelThree.add(gotoGenTF);
 	
 	buttonPanel.add(Box.createVerticalStrut(30));
-	buttonPanel.add(flowLayoutPanel);
+	buttonPanel.add(panelOne);
+	buttonPanel.add(panelTwo);
+	buttonPanel.add(panelThree);
 	buttonPanel.add(runB);
+
+	hideNavItems();
 	
 	add(buttonPanel);
+    }
+
+    private void showNavItems() {
+	nextGenB.setVisible(true);
+	prevGenB.setVisible(true);
+	firstGenB.setVisible(true);
+	lastGenB.setVisible(true);
+	gotoGenB.setVisible(true);
+	gotoGenTF.setVisible(true);
+    }
+
+    private void hideNavItems() {
+	nextGenB.setVisible(false);
+	prevGenB.setVisible(false);
+	firstGenB.setVisible(false);
+	lastGenB.setVisible(false);
+	gotoGenB.setVisible(false);
+	gotoGenTF.setVisible(false);
     }
 
     /**
@@ -125,6 +174,14 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	}
     }
 
+    private void updateVisualAgents(String personalities) {
+	System.out.println("Cur G > " + curGeneration);
+	System.out.println("new P > " + personalities);
+	for(int i = 0; i < visualAgents.size(); i++) {
+	    visualAgents.get(i).updateColor(personalities.charAt(i));
+	}
+    }
+
     public void actionPerformed(ActionEvent e) {
 	if(e.getSource() instanceof VisualAgent) {
 	    VisualAgent va = (VisualAgent)e.getSource();
@@ -132,13 +189,19 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	    community.get(va.index).swapPersonality();
 	} else if(e.getSource().equals(nextGenB)) {
 	    gameRunner.oneGeneration();
-	    updateVisualAgents();
 	} else if(e.getSource().equals(prevGenB)) {
 	    //PREV GENERATION
-	    updateVisualAgents();
+	} else if(e.getSource().equals(firstGenB)) {
+	    
+	} else if(e.getSource().equals(lastGenB)) {
+
+	} else if(e.getSource().equals(gotoGenB)) {
+
 	} else if(e.getSource().equals(runB)) {
-	    gameRunner.runEpoch();
-	    updateVisualAgents();
+	    runEpoch();
+	    showNavItems();
+	    nextGenB.setEnabled(false);
+	    runB.setEnabled(false);
 	}
     }
 

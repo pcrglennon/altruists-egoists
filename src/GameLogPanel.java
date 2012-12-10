@@ -46,6 +46,7 @@ public class GameLogPanel extends JPanel {
 
     public void updateGameLog(String newGameLogText) {
 	gameLog.setText(newGameLogText);
+	gameLog.setCaretPosition(0);
     }
 
     /**

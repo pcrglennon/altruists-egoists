@@ -38,4 +38,12 @@ public class VisualAgent extends JButton {
 	}
     }
 
+    public void updateColor(char newPersonality) {
+	if(newPersonality == 'E') {
+	    setBackground(Color.RED);
+	} else {
+	    setBackground(Color.BLUE);
+	}
+    }
+
 } 
