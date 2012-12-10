@@ -22,11 +22,11 @@ public class Config {
 
     public final static Font LABEL_FONT = new Font("SansSerif", Font.BOLD, 17);
 
-    public final static int DEF_POP_SIZE = 14;
-    public final static double DEF_ALT_COST = 0.4;
+    public final static int DEF_POP_SIZE = 8;
+    public final static double DEF_ALT_COST = 0.5;
     public final static int DEF_NUM_GEN = 4;
-    public final static int DEF_ALT_NUM = 7;
-    public final static int DEF_AVG_ALT_SIZE = 1;
+    public final static int DEF_ALT_NUM = 6;
+    public final static int DEF_AVG_ALT_GROUP_SIZE = 3;
     public final static int DEF_SEARCH_SIZE = 1;
 
 }

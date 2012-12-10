@@ -20,7 +20,7 @@ public class PopConfigPanel extends JPanel {
 	popSizeTF = new NumericTextField(2, "" + Config.DEF_POP_SIZE);
 	altCostTF = new FloatTextField(3, "" + Config.DEF_ALT_COST);
 	altNumTF = new NumericTextField(3, "" + Config.DEF_ALT_NUM);
-	avgAltSizeTF = new NumericTextField(3, "" + Config.DEF_AVG_ALT_SIZE);
+	avgAltSizeTF = new NumericTextField(3, "" + Config.DEF_AVG_ALT_GROUP_SIZE);
 	numGenTF = new NumericTextField(3, "" + Config.DEF_NUM_GEN);
 	searchSizeTF = new NumericTextField(2, "" + Config.DEF_SEARCH_SIZE);
 	setupResetB();
@@ -102,7 +102,7 @@ public class PopConfigPanel extends JPanel {
 	
 	c.gridx = 0;
 	c.gridy = 3;
-	add(new JLabel("A.A.C.S.: "), c);
+	add(new JLabel("Avg. Alt. Grp. Size: "), c);
 
 	c.gridx = 1;
 	c.gridy = 3;

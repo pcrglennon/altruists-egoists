@@ -1,9 +1,8 @@
-<project name="313_Final" basedir="." default="main">
+<project name="Altruists_Egoists" basedir="." default="main">
 
   <property name="src.dir" value="src"/>
   <property name="build.dir" value="build"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
-  <property name="jar.dir"     value="${build.dir}/jar"/>
 
   <property name="main-class" value="MainWindow"/>
   
@@ -19,8 +18,7 @@
   </target>
 
   <target name="jar" depends="compile">
-    <mkdir dir="${jar.dir}"/>
-    <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+    <jar destfile="${ant.project.name}.jar" basedir="${classes.dir}">
       <manifest>
 	<attribute name="Main-Class" value="${main-class}"/>
       </manifest>
@@ -28,7 +26,7 @@
   </target>
 
   <target name="run" depends="jar">
-    <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    <java jar="${ant.project.name}.jar" fork="true"/>
   </target>
 
   <target name="clean-build" depends="clean,jar"/>
@@ -37,6 +35,7 @@
 
   <target name="clean" description="delete old build folder">
     <delete dir="build"/>
+    <delete file="${ant.project.name}.jar"/>
   </target>
 
 </project>
