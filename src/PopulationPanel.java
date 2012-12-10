@@ -63,15 +63,60 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	gameRunner.runEpoch();
 	curGeneration = gameRunner.getCurGeneration();
 	String finalGenPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
-	updateVisualAgents();
+	System.out.println(finalGenPersonalities);
+	updateVisualAgents(finalGenPersonalities);
 
 	MainWindow mainWindow = (MainWindow)getTopLevelAncestor();
 	mainWindow.updateGameLogPanel(gameRunner.getFileString());
     }
-
-    public void nextGeneration() {
-	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration + 1);
+    
+    private void nextGeneration() {
+	curGeneration++;
+	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
 	updateVisualAgents(genPersonalities);
+	disableButtonsForGeneration();
+    }
+
+    private void prevGeneration() {
+	curGeneration--;
+	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
+	updateVisualAgents(genPersonalities);
+	disableButtonsForGeneration();
+    }
+
+    private void firstGeneration() {
+	curGeneration = 0;
+	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
+	updateVisualAgents(genPersonalities);
+	disableButtonsForGeneration();
+    }
+
+    private void lastGeneration() {
+	curGeneration = gameRunner.getNumGenerations();
+	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
+	updateVisualAgents(genPersonalities);
+	disableButtonsForGeneration();
+    }
+
+    private void gotoGeneration() {
+	try {
+	    curGeneration = Integer.parseInt(gotoGenTF.getText());
+	    String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
+	    updateVisualAgents(genPersonalities);
+	    disableButtonsForGeneration();
+	} catch (Exception e) {
+	    JOptionPane.showMessageDialog(this, "Please specify a Generation");
+	}
+    }
+
+    private void disableButtonsForGeneration() {
+	prevGenB.setEnabled(true);
+	nextGenB.setEnabled(true);
+	if(curGeneration == 0) {
+	    prevGenB.setEnabled(false);
+	} else if(curGeneration >= gameRunner.getNumGenerations()) {
+	    nextGenB.setEnabled(false);
+	}
     }
 
     private void setupButtonPanel() {
@@ -84,7 +129,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	nextGenB = new JButton("Next Gen");
 	prevGenB = new JButton("Prev. Gen");
 	firstGenB = new JButton("First Gen");
-	lastGenB = new JButton("First Gen");
+	lastGenB = new JButton("Last Gen");
 	gotoGenB = new JButton("Go to Gen #");
 	gotoGenTF = new NumericTextField(3);
 	runB = new JButton("Run");
@@ -175,8 +220,6 @@ public class PopulationPanel extends JPanel implements ActionListener {
     }
 
     private void updateVisualAgents(String personalities) {
-	System.out.println("Cur G > " + curGeneration);
-	System.out.println("new P > " + personalities);
 	for(int i = 0; i < visualAgents.size(); i++) {
 	    visualAgents.get(i).updateColor(personalities.charAt(i));
 	}
@@ -188,20 +231,19 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	    va.swapColor();
 	    community.get(va.index).swapPersonality();
 	} else if(e.getSource().equals(nextGenB)) {
-	    gameRunner.oneGeneration();
+	    nextGeneration();
 	} else if(e.getSource().equals(prevGenB)) {
-	    //PREV GENERATION
+	    prevGeneration();
 	} else if(e.getSource().equals(firstGenB)) {
-	    
+	    firstGeneration();
 	} else if(e.getSource().equals(lastGenB)) {
-
+	    lastGeneration();
 	} else if(e.getSource().equals(gotoGenB)) {
-
+	    gotoGeneration();
 	} else if(e.getSource().equals(runB)) {
 	    runEpoch();
 	    showNavItems();
 	    nextGenB.setEnabled(false);
-	    runB.setEnabled(false);
 	}
     }
 

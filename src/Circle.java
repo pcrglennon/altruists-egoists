@@ -7,7 +7,7 @@ import java.util.Random;
 
 /**
  * ISSUES: 
- * 		reset variables
+nn * 		reset variables
  * 
  * @author ClintFrank
  *
@@ -59,6 +59,7 @@ public class Circle {
 		altGroupCountOld = altGroupCountNew;
 		egoGroupCountOld = altGroupCountNew;
 		while (curGeneration!=generations){
+			System.out.println("");
 			fileString+="\n\n";
 			oneGeneration();
 			calcAndPrint();
@@ -86,8 +87,6 @@ public class Circle {
 	public void oneGeneration(){
 		//assign all values
 		for (int i=0;i<community.size();i++){  
-			int tempPersonality = community.get(i).getPersonality(); //get out current personality
-			//comPersonalityHistory[curGeneration]+=tempPersonality==2?"a":"E"; //records current strategy for history
 			community.get(i).setCurPayoff(getPayoff(i));  //gets payoff and sets value for current dude.
 		}
 		//Calculate changes
@@ -125,15 +124,16 @@ public class Circle {
 	 */
 	public void calcAndPrint(){
 		//set new stats to 0
-		altCountNew = altGroupCountNew = egoGroupCountNew = altAvgGroupSizeNew = egoAvgGroupSizeNew =0;
+		altCountNew = altGroupCountNew = egoGroupCountNew = altAvgGroupSizeNew = egoAvgGroupSizeNew = 0;
 		//how many of each type is in the population?
 		//how many groups of each are there?
+		comPersonalityHistory[curGeneration]="";
 		int prevPers = community.get(comSize-1).getPersonality(); //for comparison
 		for (Agent a: community){  //for each member
 			if (curGeneration!=0){
 				a.setPersonality(a.getTempPersonality());  //set their personality to the decision they made
 			}
-			comPersonalityHistory[curGeneration]+=a.getPersonality();
+			comPersonalityHistory[curGeneration]+=a.getPersonality()==2?"a":"E";
 			if (a.getPersonality()==2){  //if we find an altruist, we up the altCountNew
 				altCountNew++;
 				//System.out.println("altCountNew: "+altCountNew);
@@ -184,15 +184,6 @@ public class Circle {
 		egoGroupCountOld = egoGroupCountNew;
 		egoAvgGroupSizeOld = egoAvgGroupSizeNew;
 	}
-
-//  fileString+="Generation "+curGeneration+":\n";
-//	fileString+="\nAltruists\n"+
-//			"Individuals: "+altCountNew+"          Change: "+altNumChange+"\n"+
-//			"Groups: "+altGroupCountNew+"                Change: "+altGroupChange+"\n"+
-//			"Average Group Size: "+(altCountNew/(altGroupCountNew==0?1:altGroupCountNew))+"     Change: "+(altAvgGroupChange)+"\n\nEgoists\n"+
-//			"Individuals: "+(comSize-altCountNew)+"           Change: "+(egoNumChange)+"\n"+
-//			"Groups: "+altGroupCountNew+"                 Change: "+(egoGroupChange)+"\n"+
-//			"Average Group Size: "+((comSize-altCountNew)/(egoGroupCountNew==0?1:egoGroupCountNew)+"    Change: "+(egoAvgGroupChange)+"\n\n");
 	
 	public int ind(int i){
 		if (i<0){
@@ -258,7 +249,12 @@ public class Circle {
 			//EGOIST ADDING
 			if (egoNum>0){
 				tempAdd = avgEgoSize; //set tempAdd to our average group size
-				tempAdd+= (avgEgoSize==1?0:rand.nextInt(2*maxEgoChange) - maxEgoChange); //add or subtract a random value less than maxSize
+				try{
+					tempAdd+= (avgEgoSize==1?0:rand.nextInt(2*maxEgoChange) - maxEgoChange); //add or subtract a random value less than maxSize
+				}
+				catch (Exception e){
+					tempAdd = 1;
+				}
 				if (egoNum<tempAdd){
 					tempAdd = egoNum;
 				}
@@ -285,19 +281,23 @@ public class Circle {
 	 * @param gen
 	 * @return
 	 */
-	public String getGenerationPersonalities(int gen){
-		if (gen>generations-1){
-			gen=generations-1;
-		}
-		else if (gen<0){
-			gen=0;
-		}
-		curGeneration = gen;
-		return comPersonalityHistory[curGeneration];
+    	public String getGenerationPersonalities(int gen){
+	    if (gen>generations-1){
+		gen=generations-1;
+	    }
+	    else if (gen<0){
+		gen=0;
+	    }
+	    curGeneration = gen;
+	    return comPersonalityHistory[curGeneration];
 	}
-
+    
     public int getCurGeneration() {
 	return curGeneration;
+    }
+
+    public int getNumGenerations() {
+	return generations;
     }
 
     public String getFileString() {
@@ -326,7 +326,7 @@ public class Circle {
 	public static void main(String[] args){
 		Circle test = new Circle();
 		//int comSize, double cost, int altNum, int avgAltSize, int generations, int searchSize
-		test.gridInitialize(20,.4,1,3,5,1);
+		test.gridInitialize(10,.4,8,1,5,1);
 		test.runEpoch();
 	}
 }
