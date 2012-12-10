@@ -12,6 +12,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
     private Circle gameRunner;
     private LinkedList<Agent> community;
     private int curGeneration;
+    private boolean hasRun;
 
     private JLabel curGenLabel;
 
@@ -23,6 +24,8 @@ public class PopulationPanel extends JPanel implements ActionListener {
     private JButton gotoGenB;
     private NumericTextField gotoGenTF;
     private JButton runB;
+    private JButton animateB;
+    private NumericTextField animateSpeedTF;
 
     //Contains VisualAgents - JButtons that represent an agent
     private ArrayList<VisualAgent> visualAgents;
@@ -46,6 +49,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	super();
 
 	gameRunner = new Circle();
+	hasRun = false;
 	//This means each component will be added w/ ABSOLUTE position (actual xy coords)
 	setLayout(null);
 	setPreferredSize(Config.POP_PANEL_PREF_SIZE);
@@ -61,17 +65,45 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	layoutPopulation();
     }
 
-    public void runEpoch() {
+    public void runEpoch(boolean updateGameLog) {
 	gameRunner.runEpoch();
+	hasRun = true;
 	curGeneration = gameRunner.getCurGeneration() - 1;
 	String finalGenPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
-	System.out.println(finalGenPersonalities);
 	updateVisualAgents(finalGenPersonalities);
 
-	MainWindow mainWindow = (MainWindow)getTopLevelAncestor();
-	mainWindow.updateGameLogPanel(gameRunner.getFileString());
+	if(updateGameLog) {
+	    MainWindow mainWindow = (MainWindow)getTopLevelAncestor();
+	    mainWindow.updateGameLogPanel(gameRunner.getFileString());
+	}
 
 	updateButtonPanel();
+    }
+
+    private void animate() {
+	if(!hasRun) {
+	    runEpoch(false);
+	    firstGeneration();
+	}
+	int animSpeed = 1000;
+	try {
+	    animSpeed = Integer.parseInt(animateSpeedTF.getText());
+	} catch(Exception e) {
+	    
+	}
+	Timer t = new Timer(animSpeed, new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    if(curGeneration < gameRunner.getNumGenerations() - 1) {
+			nextGeneration();
+		    } else { 
+			//Update the game Log
+			MainWindow mainWindow = (MainWindow)getTopLevelAncestor();
+			mainWindow.updateGameLogPanel(gameRunner.getFileString());
+			((Timer)e.getSource()).stop();
+		    }
+		}
+	    });
+	t.start();
     }
 
     private void prevGeneration() {
@@ -142,6 +174,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	gotoGenTF = new NumericTextField(3);
 	runB = new JButton("Run");
 	runB.setAlignmentX(CENTER_ALIGNMENT);
+	animateB = new JButton("Animate");
+	JLabel animateSpeedLabel = new JLabel("Speed (ms)");
+	animateSpeedTF = new NumericTextField(4, "1000");
 
 	nextGenB.addActionListener(this);
 	prevGenB.addActionListener(this);
@@ -149,6 +184,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	lastGenB.addActionListener(this);
 	gotoGenB.addActionListener(this);
 	runB.addActionListener(this);
+	animateB.addActionListener(this);
 
 	JPanel panelOne = new JPanel();
 	panelOne.setLayout(new FlowLayout());
@@ -164,6 +200,12 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	panelThree.setLayout(new FlowLayout());
 	panelThree.add(gotoGenB);
 	panelThree.add(gotoGenTF);
+
+	JPanel panelFour = new JPanel();
+	panelFour.setLayout(new FlowLayout());
+	panelFour.add(animateB);
+	panelFour.add(animateSpeedLabel);
+	panelFour.add(animateSpeedTF);
 	
 	buttonPanel.add(Box.createVerticalStrut(15));
 	buttonPanel.add(curGenLabel);
@@ -172,6 +214,8 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	buttonPanel.add(panelTwo);
 	buttonPanel.add(panelThree);
 	buttonPanel.add(runB);
+	buttonPanel.add(Box.createVerticalStrut(10));
+	buttonPanel.add(panelFour);
 
 	hideNavItems();
 	
@@ -251,15 +295,17 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	} else if(e.getSource().equals(gotoGenB)) {
 	    gotoGeneration();
 	} else if(e.getSource().equals(runB)) {
-	    runEpoch();
+	    runEpoch(true);
 	    showNavItems();
 	    runB.setEnabled(false);
+	} else if(e.getSource().equals(animateB)) {
+	    animate();
 	}
     }
 
     //This is a JPanel method, it draws stuff when initialized, resized, or repaint() is called
     @Override
-    public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {
 	//Draw a circle to fill the square!
 	g.drawOval(dimensions[0] + circleOffset, dimensions[1] + circleOffset, dimensions[2], dimensions[3]);
     }

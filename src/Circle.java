@@ -59,7 +59,7 @@ public class Circle {
 		altGroupCountOld = altGroupCountNew;
 		egoGroupCountOld = altGroupCountNew;
 		while (curGeneration!=generations){
-			System.out.println("");
+		    //System.out.println("");
 			fileString+="\n\n";
 			oneGeneration();
 			calcAndPrint();
