@@ -12,6 +12,8 @@ To run the current version:
 3) Run "java -jar Altruists_Egoists.jar"
 
 
+
+
 To build and run the source code:
 
 1) Download Apache Ant if not already installed
