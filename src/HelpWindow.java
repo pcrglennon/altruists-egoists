@@ -33,8 +33,8 @@ public class HelpWindow extends JFrame {
 	panel = getContentPane();
 
 	try {
-	    BufferedImage helpImage;
-	    //panel.add(new JScrollPane(new JLabel(new ImageIcon(helpImage)), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+	    BufferedImage helpImage = ImageIO.read(new File("media/AEexplained.jpg"));
+	    panel.add(new JScrollPane(new JLabel(new ImageIcon(helpImage)), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 	} catch(Exception e) {
 	    e.printStackTrace();
 	}

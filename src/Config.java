@@ -12,7 +12,7 @@ import java.awt.Font;
 public class Config {
 
     public final static Dimension MAIN_WINDOW_SIZE = new Dimension(1000,750);
-    public final static Dimension HELP_WINDOW_SIZE = new Dimension(400, 750);
+    public final static Dimension HELP_WINDOW_SIZE = new Dimension(615, 750);
     public final static Dimension POP_CONFIG_PANEL_PREF_SIZE = new Dimension(200, 400);
 
     public final static Dimension POP_PANEL_PREF_SIZE = new Dimension(450, 420);
