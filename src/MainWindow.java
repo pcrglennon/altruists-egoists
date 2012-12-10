@@ -1,6 +1,11 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+
+import java.io.File;
+
+import javax.imageio.ImageIO;
 
 import javax.swing.*;
 
@@ -11,10 +16,13 @@ public class MainWindow extends JFrame {
 
     private PopulationPanel populationPanel;
 
+    private JPanel gridPanel;
+    private JPanel imgPanel;
     private PopConfigPanel popConfigPanel;
     
     private JPanel buttonPanel;
     private JButton quitB;
+    private JButton helpB;
 
     private GameLogPanel gameLogPanel;
     private int curIndex;
@@ -42,8 +50,17 @@ public class MainWindow extends JFrame {
 	
 	panel = getContentPane();
 
+	gridPanel = new JPanel();
+	gridPanel.setLayout(new GridLayout(2, 0));
+	
+	setupImgPanel();
+	
+	gridPanel.add(imgPanel);
+
 	popConfigPanel = new PopConfigPanel();
-	add(popConfigPanel, BorderLayout.LINE_START);
+	gridPanel.add(popConfigPanel);
+
+	add(gridPanel, BorderLayout.LINE_START);
 	
 	populationPanel = new PopulationPanel(popConfigPanel.getConfigInfo());
 	add(populationPanel, BorderLayout.CENTER);
@@ -77,6 +94,40 @@ public class MainWindow extends JFrame {
 	gameLogPanel.updateGameLog(gameLogText);
     }
     
+    private void setupImgPanel() {
+	imgPanel = new JPanel();
+	imgPanel.setLayout(new BoxLayout(imgPanel, BoxLayout.Y_AXIS));
+	try {
+	    imgPanel.add(Box.createVerticalStrut(25));
+	    BufferedImage img = ImageIO.read(new File("media/BearBones2.png"));
+	    JLabel bearImage = new JLabel(new ImageIcon(img));
+	    //This aligns the image to the left for some reason I don't understand
+	    bearImage.setAlignmentX(CENTER_ALIGNMENT);
+	    imgPanel.add(bearImage);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	imgPanel.add(Box.createVerticalStrut(25));
+	setupHelpB();
+	JPanel helpBPanel = new JPanel();
+	helpBPanel.setLayout(new FlowLayout());
+	helpBPanel.add(helpB);
+	imgPanel.add(helpBPanel);
+    }
+    
+    private void setupHelpB() {
+	helpB = new JButton("Help");
+
+	helpB.addActionListener(new ActionListener() {
+		
+		public void actionPerformed(ActionEvent e) {
+		    HelpWindow hw = new HelpWindow();
+		    hw.setVisible(true);
+		}
+	    });
+	
+    }
+
     private void setupButtonPanel() {
 	buttonPanel = new JPanel();
 	buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -89,7 +140,7 @@ public class MainWindow extends JFrame {
 		    System.exit(0);
 		}
 	    });
-			      
+
 	buttonPanel.add(quitB);
     }
 

@@ -19,7 +19,10 @@ public class Config {
     public final static int[] POP_CIRCLE_DIMENSIONS = {0, 0, 400, 400};
 
     public final static Dimension SIDE_PANEL_PREF_SIZE = new Dimension(MAIN_WINDOW_SIZE.width /3 - 100, MAIN_WINDOW_SIZE.height);
-
+	
+    public final static Color ALTRUIST_COLOR = Color.BLUE;
+    public final static Color EGOIST_COLOR = Color.RED;
+	
     public final static Font LABEL_FONT = new Font("SansSerif", Font.BOLD, 17);
 
     public final static int DEF_POP_SIZE = 8;

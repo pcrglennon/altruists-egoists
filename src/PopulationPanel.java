@@ -96,9 +96,11 @@ public class PopulationPanel extends JPanel implements ActionListener {
 		    if(curGeneration < gameRunner.getNumGenerations() - 1) {
 			nextGeneration();
 		    } else { 
-			//Animation is done - Update the game Log
+			//Animation is done - Update the game Log and Nav Buttons
 			MainWindow mainWindow = (MainWindow)getTopLevelAncestor();
 			mainWindow.updateGameLogPanel(gameRunner.getFileString());
+			showNavItems();
+			runB.setEnabled(false);
 			((Timer)e.getSource()).stop();
 		    }
 		}
@@ -146,13 +148,16 @@ public class PopulationPanel extends JPanel implements ActionListener {
     }
 
     private void updateButtonPanel() {
-	curGenLabel.setText("Cur. Generation > " + curGeneration);
 	prevGenB.setEnabled(true);
 	nextGenB.setEnabled(true);
 	if(curGeneration == 0) {
 	    prevGenB.setEnabled(false);
+	    curGenLabel.setText("Cur. Generation = " + curGeneration + " (First)");
 	} else if(curGeneration >= gameRunner.getNumGenerations() - 1) {
 	    nextGenB.setEnabled(false);
+	    curGenLabel.setText("Cur. Generation = " + curGeneration + " (Last)");
+	} else {
+	    curGenLabel.setText("Cur. Generation = " + curGeneration);	    
 	}
     }
 
@@ -163,7 +168,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	Rectangle bpBounds = new Rectangle((dimensions[0] + 20), (dimensions[1] + dimensions[3] + 50), dimensions[3], 250);
 	buttonPanel.setBounds(bpBounds);
 
-	curGenLabel = new JLabel("Cur. Generation > " + curGeneration);
+	curGenLabel = new JLabel("Cur. Generation = " + curGeneration + " (First)");
 	curGenLabel.setAlignmentX(CENTER_ALIGNMENT);
 
 	nextGenB = new JButton("Next Gen");

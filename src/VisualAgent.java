@@ -1,5 +1,3 @@
-import java.awt.Color;
-
 import javax.swing.JButton;
 
 public class VisualAgent extends JButton {
@@ -14,35 +12,35 @@ public class VisualAgent extends JButton {
 	//setText("" + (index+1));
 	setBorderPainted(false);
 	if(personality == 1) {
-	    setBackground(Color.RED);
+	    setBackground(Config.EGOIST_COLOR);
 	} else {
-	    setBackground(Color.BLUE);
+	    setBackground(Config.ALTRUIST_COLOR);
 	}
     }
 
     public void swapColor() {
 	if(personality == 1) { 
 	    personality = 2;
-	    setBackground(Color.BLUE);
+	    setBackground(Config.ALTRUIST_COLOR);
 	} else {
 	    personality = 1;
-	    setBackground(Color.RED);
+	    setBackground(Config.EGOIST_COLOR);
 	}
     }
 
     public void updateColor(int newPersonality) {
 	if(newPersonality == 1) {
-	    setBackground(Color.RED);
+	    setBackground(Config.EGOIST_COLOR);
 	} else {
-	    setBackground(Color.BLUE);
+	    setBackground(Config.ALTRUIST_COLOR);
 	}
     }
 
     public void updateColor(char newPersonality) {
 	if(newPersonality == 'E') {
-	    setBackground(Color.RED);
+	    setBackground(Config.EGOIST_COLOR);
 	} else {
-	    setBackground(Color.BLUE);
+	    setBackground(Config.ALTRUIST_COLOR);
 	}
     }
 
