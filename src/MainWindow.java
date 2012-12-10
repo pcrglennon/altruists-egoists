@@ -30,6 +30,12 @@ public class MainWindow extends JFrame {
     }
 
     private void createAndShowGUI() {
+	try {
+	    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+	} catch (Exception e) {
+	
+	}
+
 	setSize(Config.MAIN_WINDOW_SIZE);
 	setTitle("Altruists and Egoists");
 	//Closing the Window will terminate the program
