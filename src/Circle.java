@@ -114,7 +114,7 @@ public class Circle {
 			}
 			else{
 				//System.out.println((altVal/altNum>egoVal/egoNum?"Altruist\n":"Egoist\n"));
-				community.get(i).setTempPersonality((altVal/altNum>egoVal/egoNum?2:1));
+				community.get(i).setTempPersonality((altVal/altNum>=egoVal/egoNum?2:1));
 			}
 		}
 	}
