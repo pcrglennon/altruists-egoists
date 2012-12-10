@@ -286,8 +286,11 @@ public class Circle {
 	 * @return
 	 */
 	public String getGenerationPersonalities(int gen){
-		if (gen>generations-1 || gen<0){
-			return null;
+		if (gen>generations-1){
+			gen=generations-1;
+		}
+		else if (gen<0){
+			gen=0;
 		}
 		curGeneration = gen;
 		return comPersonalityHistory[curGeneration];
