@@ -5,9 +5,20 @@ COM 313: Algorithmic Game Theory final project by Peter Glennon and Clint Mullin
 
 To run the current version:
 
-1) Download and extract the project
+1) Download Altruists_Egoists.jar
 
-2) Move into the root project directory
+2) In a terminal, navigate to the directory containing the .jar
 
-3) If Apache Ant is installed: run "ant run".  Otherwise, run "java -jar Altruists_Egoists.jar"
+3) Run "java -jar Altruists_Egoists.jar"
+
+
+To build and run the source code:
+
+1) Download Apache Ant if not already installed
+
+2) Download and extract the project
+
+3) In a terminal, navigate to the root project directory
+
+4) Run "ant run"
  
