@@ -35,7 +35,6 @@ public class MainWindow extends JFrame {
 	} catch (Exception e) {
 	
 	}
-
 	setSize(Config.MAIN_WINDOW_SIZE);
 	setTitle("Altruists and Egoists");
 	//Closing the Window will terminate the program

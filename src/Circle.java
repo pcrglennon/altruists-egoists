@@ -32,7 +32,7 @@ public class Circle {
 	 * @param avgAltSize
 	 */
 	public void gridInitialize(int comSize, double cost, int altNum, int avgAltSize, int generations, int searchSize){
-		this.fileString = "Generation Stats of Generation Zero\n"+
+		this.fileString = "Initialization\n\n"+
 						  "Community Size: "+comSize+"\n"+
 						  "Cost of Altruism: "+cost+	
 						  "\n\nAltruists\n"+
@@ -173,10 +173,10 @@ public class Circle {
 		fileString+="\nAltruists\n"+
 				"Individuals: "+altCountNew+"          Change: "+altNumChange+"\n"+
 				"Groups: "+altGroupCountNew+"                Change: "+altGroupChange+"\n"+
-				"Average Group Size: "+altAvgGroupSizeNew+"     Change: "+(altAvgGroupChange)+"\n\nEgoists\n"+
+				"Avg. Group Size: "+altAvgGroupSizeNew+"     Change: "+(altAvgGroupChange)+"\n\nEgoists\n"+
 				"Individuals: "+(comSize-altCountNew)+"           Change: "+(egoNumChange)+"\n"+
 				"Groups: "+altGroupCountNew+"                 Change: "+(egoGroupChange)+"\n"+
-				"Average Group Size: "+egoAvgGroupSizeNew+"    Change: "+(egoAvgGroupChange)+"\n\n";
+				"Avg. Group Size: "+egoAvgGroupSizeNew+"    Change: "+(egoAvgGroupChange)+"\n\n";
 		//set new stats to old
 		altCountOld = altCountNew;
 		altGroupCountOld = altGroupCountNew;
