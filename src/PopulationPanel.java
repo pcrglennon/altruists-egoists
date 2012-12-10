@@ -34,7 +34,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
     private ArrayList<Rectangle> popBounds;
 
     //400 by 400 square
-    private int[] dimensions = {0, 0, 400, 400};
+    private int[] dimensions = Config.POP_CIRCLE_DIMENSIONS;
     private int circleOffset = 20;
     private int agentOffset = 10;
     //VisualAgent size
@@ -96,7 +96,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 		    if(curGeneration < gameRunner.getNumGenerations() - 1) {
 			nextGeneration();
 		    } else { 
-			//Update the game Log
+			//Animation is done - Update the game Log
 			MainWindow mainWindow = (MainWindow)getTopLevelAncestor();
 			mainWindow.updateGameLogPanel(gameRunner.getFileString());
 			((Timer)e.getSource()).stop();
@@ -175,8 +175,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	runB = new JButton("Run");
 	runB.setAlignmentX(CENTER_ALIGNMENT);
 	animateB = new JButton("Animate");
-	JLabel animateSpeedLabel = new JLabel("Speed (ms)");
+	JLabel animateSpeedLabel = new JLabel("Speed:");
 	animateSpeedTF = new NumericTextField(4, "1000");
+	JLabel millisLabel = new JLabel("(millis)");
 
 	nextGenB.addActionListener(this);
 	prevGenB.addActionListener(this);
@@ -206,6 +207,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	panelFour.add(animateB);
 	panelFour.add(animateSpeedLabel);
 	panelFour.add(animateSpeedTF);
+	panelFour.add(millisLabel);
 	
 	buttonPanel.add(Box.createVerticalStrut(15));
 	buttonPanel.add(curGenLabel);
