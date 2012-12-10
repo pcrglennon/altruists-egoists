@@ -3,67 +3,67 @@ Community Size: 10
 Cost of Altruism: 0.4
 
 Altruists
-Starting Altruists: 8
-Average Group Size: 1
+Starting Altruists: 2
+Avg. Group Size: 1
 
 Egoists
-Starting Egoists: 2
-Average Group Size: 0
+Starting Egoists: 8
+Avg. Group Size: 4
 
 
 
 Generation 0:
 
 Altruists
-Individuals: 8          Change: 0
+Individuals: 2          Change: 0
 Groups: 2                Change: 0
-Average Group Size: 4     Change: 0
+Average Group Size: 1     Change: 0
 
 Egoists
-Individuals: 2           Change: 0
+Individuals: 8           Change: 0
 Groups: 2                 Change: 0
-Average Group Size: 1    Change: 0
+Average Group Size: 4    Change: 0
 
-aEaEaaaaaa
+aEEaEEEEEE
 
 Generation 1:
 
 Altruists
-Individuals: 5          Change: -3
-Groups: 1                Change: -1
-Average Group Size: 5     Change: 1
+Individuals: 0          Change: -2
+Groups: 0                Change: -2
+Average Group Size: 0     Change: -1
 
 Egoists
-Individuals: 5           Change: 3
-Groups: 1                 Change: -1
-Average Group Size: 5    Change: 4
+Individuals: 10           Change: 2
+Groups: 0                 Change: -1
+Average Group Size: 10    Change: 6
 
-EEEEEaaaaa
+EEEEEEEEEE
 
 Generation 2:
 
 Altruists
-Individuals: 7          Change: 2
-Groups: 1                Change: 0
-Average Group Size: 7     Change: 2
+Individuals: 0          Change: 0
+Groups: 0                Change: 0
+Average Group Size: 0     Change: 0
 
 Egoists
-Individuals: 3           Change: -2
-Groups: 1                 Change: 0
-Average Group Size: 3    Change: -2
+Individuals: 10           Change: 0
+Groups: 0                 Change: 0
+Average Group Size: 10    Change: 0
 
-aEEEaaaaaa
+EEEEEEEEEE
 
 Generation 3:
 
 Altruists
-Individuals: 9          Change: 2
-Groups: 1                Change: 0
-Average Group Size: 9     Change: 2
+Individuals: 0          Change: 0
+Groups: 0                Change: 0
+Average Group Size: 0     Change: 0
 
 Egoists
-Individuals: 1           Change: -2
-Groups: 1                 Change: 0
-Average Group Size: 1    Change: -2
+Individuals: 10           Change: 0
+Groups: 0                 Change: 0
+Average Group Size: 10    Change: 0
 
-aaEaaaaaaa
+EEEEEEEEEE

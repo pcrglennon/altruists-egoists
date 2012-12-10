@@ -3,7 +3,5 @@ build/
 # Ignore local copies of java files
 *.java~
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# Ignore the results.txt file
+media/results.txt

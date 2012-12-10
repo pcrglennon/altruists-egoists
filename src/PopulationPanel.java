@@ -244,6 +244,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	    runEpoch();
 	    showNavItems();
 	    nextGenB.setEnabled(false);
+	    runB.setEnabled(false);
 	}
     }
 
