@@ -6,8 +6,7 @@ import java.util.Random;
 
 
 /**
- * ISSUES: 
-nn * 		reset variables
+ * This class creates a circular linked list of Agents and performs all the altruist egoist logic in the program.
  * 
  * @author ClintFrank
  *

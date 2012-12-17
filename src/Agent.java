@@ -21,6 +21,10 @@ public class Agent {
 		this.personality = personality;
 	}
 
+	/**
+	* Reverses the current personality of the Agent
+	*
+	*/
     public void swapPersonality() {
 	if(personality == 1) {
 	    personality = 2;
