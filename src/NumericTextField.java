@@ -13,9 +13,12 @@ class NumericTextField extends JTextField {
     //Maximum number of digits allowed as input
     //Also used as the number of columns in the text field
     private int maxDigits;
-
+    
     private boolean autofill;
 
+    /**
+     * Constructor - sets the initial text of the field
+     */
     public NumericTextField(int maxDigits, String input) {
 	super();
 	this.maxDigits = maxDigits;
@@ -36,13 +39,13 @@ class NumericTextField extends JTextField {
     /**
      * Will only accept numbers as input
      */
-    
     private class NumericDocument extends PlainDocument {
 	
 	private final Pattern DIGITS = Pattern.compile("\\d*");
 	
 	@Override
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+	    //Allow autofilling at initialization
 	    if(autofill) {
 		super.insertString(offs, str, a);
 	    }

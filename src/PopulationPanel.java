@@ -7,15 +7,23 @@ import java.util.LinkedList;
 
 import javax.swing.*;
 
+/**
+ * This is the key GUI component: contains the visual representation of the community
+ * and the navigation buttons to switch between generations
+ */
+
 public class PopulationPanel extends JPanel implements ActionListener {
 
+    //Variables for the actual game, running in the background
     private Circle gameRunner;
     private LinkedList<Agent> community;
     private int curGeneration;
+    //Necessary for animation - 
     private boolean hasRun;
-
+    
     private JLabel curGenLabel;
 
+    //Buttons and textfields to control moving between generations
     private JPanel buttonPanel;
     private JButton prevGenB;
     private JButton nextGenB;
@@ -24,6 +32,7 @@ public class PopulationPanel extends JPanel implements ActionListener {
     private JButton gotoGenB;
     private NumericTextField gotoGenTF;
     private JButton runB;
+    //Animation button and textfield to control the animation speed
     private JButton animateB;
     private NumericTextField animateSpeedTF;
 
@@ -45,6 +54,10 @@ public class PopulationPanel extends JPanel implements ActionListener {
     private int centerX = (dimensions[2] - dimensions[0])/2;
     private int centerY = (dimensions[3] - dimensions[1])/2;
 
+    /*
+     * Constructor - initializes the button panel, the game itself, and calls the
+     * layoutPopulation() method
+     */
     public PopulationPanel(double[] configInfo) {
 	super();
 
@@ -65,6 +78,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	layoutPopulation();
     }
 
+    /**
+     * Runs all generations, and updates the visual agents
+     */
     public void runEpoch(boolean updateGameLog) {
 	gameRunner.runEpoch();
 	hasRun = true;
@@ -80,17 +96,25 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	updateButtonPanel();
     }
 
+    /**
+     * Animate to the end of the epoch, starting from the current generation
+     *
+     * If the epoch has not been run yet, it runs it first
+     */
+
     private void animate() {
 	if(!hasRun) {
 	    runEpoch(false);
 	    firstGeneration();
 	}
 	int animSpeed = 1000;
+	//Get the new animation speed from the textbox
 	try {
 	    animSpeed = Integer.parseInt(animateSpeedTF.getText());
 	} catch(Exception e) {
 	    
 	}
+	//Timer that controls the animation
 	Timer t = new Timer(animSpeed, new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    if(curGeneration < gameRunner.getNumGenerations() - 1) {
@@ -108,6 +132,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	t.start();
     }
 
+    /**
+     * Move to previous generation, and update visualagents and button panel
+     */
     private void prevGeneration() {
 	curGeneration--;
 	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
@@ -115,6 +142,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	updateButtonPanel();
     }
 
+    /**
+     * Move to next generation and update visualagents and button panel
+     */
     private void nextGeneration() {
 	curGeneration++;
 	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
@@ -122,6 +152,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	updateButtonPanel();
     }
 
+    /**
+     * Move to the first generation, and update visualagents and button panel
+     */
     private void firstGeneration() {
 	curGeneration = 0;
 	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
@@ -129,6 +162,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	updateButtonPanel();
     }
 
+    /**
+     * Move to the last generation, and update visualagents and button panel
+     */
     private void lastGeneration() {
 	curGeneration = gameRunner.getNumGenerations() - 1;
 	String genPersonalities = gameRunner.getGenerationPersonalities(curGeneration);
@@ -136,17 +172,26 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	updateButtonPanel();
     }
 
+
+    /**
+     * Move to a specific generation, and update visualagents and button panel
+     */
     private void gotoGeneration() {
 	try {
 	    String genPersonalities = gameRunner.getGenerationPersonalities(Integer.parseInt(gotoGenTF.getText()));
 	    curGeneration = gameRunner.getCurGeneration();
 	    updateVisualAgents(genPersonalities);
 	    updateButtonPanel();
-	} catch (Exception e) {
+	} catch (Exception e) { //If the textfield is empty, show a pop-up indicating this
 	    JOptionPane.showMessageDialog(this, "Please specify a Generation");
 	}
     }
 
+    /**
+     * Enable and disable the next/prev buttons based on the current generation
+     *
+     * I.e. if curGeneration is the last generation, disable the Next Gen button
+     */
     private void updateButtonPanel() {
 	prevGenB.setEnabled(true);
 	nextGenB.setEnabled(true);
@@ -161,6 +206,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	}
     }
 
+    /**
+     * Initialize the button panel
+     */
     private void setupButtonPanel() {
 	buttonPanel = new JPanel();
 	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -249,7 +297,6 @@ public class PopulationPanel extends JPanel implements ActionListener {
 
     /**
      * Layout each individual along the circle
-     *
      */
     private void layoutPopulation() {
 	popBounds.clear();
@@ -261,11 +308,20 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	}
 	//Absolute positioning coords
 	int n = community.size();
+	/**
+	 * Layout coords depend on the size of the community, as each agent must
+	 * be evenly spaced
+	 *
+	 * I got the equation from this Yahoo answers page: 
+	 * http://answers.yahoo.com/question/index?qid=20090905193658AAcXIQw
+	 * (I know, not a credible source, but it does work!)
+	 */
 	for(int i = 0; i < n; i++) {
 	    double cos = Math.cos(Math.toRadians(((double)i/n)*360));
 	    double sin = Math.sin(Math.toRadians(((double)i/n)*360));
 	    popBounds.add(new Rectangle((int)((cos*rad) + centerX)+agentOffset, (int)((sin*rad) + centerY)+agentOffset, agentSize, agentSize));
 	}
+	//Set each visual agent's coords to the coords set up in the previous loop
 	int counter = 0;
 	for(VisualAgent va: visualAgents) {
 	    va.setBounds(popBounds.get(counter));
@@ -274,18 +330,18 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	}
     }
 
-    private void updateVisualAgents() {
-	for(VisualAgent va: visualAgents) {
-	    va.updateColor(community.get(va.index).getPersonality());
-	}
-    }
-
+    /**
+     * Update the color of each visual agent based on the given personality string
+     */
     private void updateVisualAgents(String personalities) {
 	for(int i = 0; i < visualAgents.size(); i++) {
 	    visualAgents.get(i).updateColor(personalities.charAt(i));
 	}
     }
-
+    
+    /**
+     * Handle button clicks
+     */
     public void actionPerformed(ActionEvent e) {
 	if(e.getSource() instanceof VisualAgent) {
 	    VisualAgent va = (VisualAgent)e.getSource();
@@ -310,7 +366,9 @@ public class PopulationPanel extends JPanel implements ActionListener {
 	}
     }
 
-    //This is a JPanel method, it draws stuff when initialized, resized, or repaint() is called
+    /**
+     * Draw the circle representing the links between the agents
+     */
     @Override
 	public void paintComponent(Graphics g) {
 	//Draw a circle to fill the square!

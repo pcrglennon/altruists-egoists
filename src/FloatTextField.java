@@ -3,6 +3,10 @@ import java.util.regex.Pattern;
 import javax.swing.JTextField;
 import javax.swing.text.*;
 
+/**
+ * Similar to NumericTexField, but accepts decimal numbers from 0.00 to 9.99
+ */
+
 class FloatTextField extends JTextField {
 
     //Maximum number of digits 
@@ -10,7 +14,11 @@ class FloatTextField extends JTextField {
     private int maxDigits;
 
     private boolean autofill = true;
-
+    
+    //Regular Expression denoting three forms of decimal numbers:
+    // 1) 1 digit followed by a period, followed by 1-2 digits
+    // 2) A period, followed by 1-3 digits
+    // 3) 1 digit (single digit int)
     private final Pattern FULL_FLOAT = Pattern.compile("^\\d\\.\\d+$|^\\.\\d+$|^\\d$");
 
     public FloatTextField(int maxDigits, String input) {
@@ -25,6 +33,10 @@ class FloatTextField extends JTextField {
 	this(maxDigits, "");
     }
     
+    /**
+     * Checks first to see if the field is empty, then checks the contents of the
+     * field against the FULL_FLOAT regular expression
+     */
     public String validateInput(String tfName) {
 	if(getText().equals("")) {
 	    return tfName + ": Text Field is Empty!\n";
@@ -42,7 +54,7 @@ class FloatTextField extends JTextField {
     }
 
     /**
-     * Will only accept numbers and 1 decimal point as input
+     * Will only accept numbers and periods as input
      */
     
     private class DecimalDocument extends PlainDocument {

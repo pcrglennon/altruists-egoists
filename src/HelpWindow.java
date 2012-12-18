@@ -15,6 +15,9 @@ public class HelpWindow extends JFrame {
 
     Container panel;
     
+    /**
+     * Run createFrame(), the intialization code, in a new thread
+     */
     public HelpWindow() {
 	super();
 
@@ -24,7 +27,10 @@ public class HelpWindow extends JFrame {
 		}
 	    });
     }
-
+    
+    /** 
+     * Initialization - add the image to the panel
+     */
     private void createFrame() {
 	setSize(Config.HELP_WINDOW_SIZE);
 	setTitle("Help");

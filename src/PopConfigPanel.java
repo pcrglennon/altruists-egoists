@@ -7,6 +7,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * Contains a number of textfields to configure a new population of agents, and
+ * a button to reset the PopulationPanel with the new configuration options
+ */
 public class PopConfigPanel extends JPanel {
 
     private NumericTextField popSizeTF, altNumTF, avgAltSizeTF, numGenTF, searchSizeTF;
@@ -14,6 +18,9 @@ public class PopConfigPanel extends JPanel {
 
     private JButton resetB;
 
+    /**
+     * Constructor - intializes the text fields and the reset button
+     */
     public PopConfigPanel() {
 	super();
 	setPreferredSize(Config.POP_CONFIG_PANEL_PREF_SIZE);
@@ -27,6 +34,10 @@ public class PopConfigPanel extends JPanel {
 	addComponentsToPanel();
     }
 
+    /**
+     * Sets up the reset button, and assigns it to call resetPopulationPanel()
+     * from the main window
+     */
     public void setupResetB() {
 	resetB = new JButton("Reset");
 	resetB.addActionListener(new ActionListener() {
@@ -39,12 +50,19 @@ public class PopConfigPanel extends JPanel {
 	    });
     }
 
+    /**
+     * Returns an array of all the configuration options
+     */
     public double[] getConfigInfo() {
 	double[] configInfo = {Double.parseDouble(popSizeTF.getText()), Double.parseDouble(altCostTF.getText()), Double.parseDouble(altNumTF.getText()), Double.parseDouble(avgAltSizeTF.getText()), Double.parseDouble(numGenTF.getText()), Double.parseDouble(searchSizeTF.getText())};
 	return configInfo;
     }
 
-    //Returns "" if no error
+    /**
+     * Validate all the inputs, and return a string representing all input errors
+     *
+     * Returns an empty string ("") if there are no errors
+     */
     public String checkInputs() {
 	StringBuilder errors = new StringBuilder();
 	if(popSizeTF.getText().equals("")) {
@@ -68,6 +86,9 @@ public class PopConfigPanel extends JPanel {
 	return errors.toString();
     }
 
+    /**
+     * Add each textfield (and a label marking the textfield) to the panel
+     */
     private void addComponentsToPanel() {
 	setLayout(new GridBagLayout());
 	GridBagConstraints c = new GridBagConstraints();

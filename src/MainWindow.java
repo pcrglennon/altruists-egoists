@@ -9,6 +9,10 @@ import javax.imageio.ImageIO;
 
 import javax.swing.*;
 
+/**
+ * The Main window - contains the population panel, the population config panel, 
+ * and the game log
+ */
 public class MainWindow extends JFrame {
 
     //The main content panel
@@ -25,8 +29,11 @@ public class MainWindow extends JFrame {
     private JButton helpB;
 
     private GameLogPanel gameLogPanel;
-    private int curIndex;
-
+    
+    /**
+     * Constructor - although the initialization code occurs in createAndShowGUI(),
+     * which occurs in a separate thread
+     */
     public MainWindow() {
 	super();
 	
@@ -36,8 +43,13 @@ public class MainWindow extends JFrame {
 		}
 	    });
     }
-
+    
+    /**
+     * Initializes the graphical things - sets up all the various panels
+     */
     private void createAndShowGUI() {
+	//Make sure the window looks ok on Mac OR Linux
+	//And hopefully Windows as well, although that is yet to be tested!
 	try {
 	    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 	} catch (Exception e) {
@@ -72,13 +84,18 @@ public class MainWindow extends JFrame {
 	gameLogPanel.setPreferredSize(Config.SIDE_PANEL_PREF_SIZE);
 	panel.add(gameLogPanel, BorderLayout.LINE_END);
 
+	//Try to allot each panel its preferred size
 	pack();
 
 	setVisible(true);
     }
 
+    /**
+     * Create a new population panel with the options from popConfigPanel
+     */
     public void resetPopulationPanel() {
 	String errors = popConfigPanel.checkInputs();
+	//If popConfigPanel is properly filled out
 	if(errors.equals("")) {
 	    panel.remove(populationPanel);
 	    populationPanel = new PopulationPanel(popConfigPanel.getConfigInfo());
@@ -86,14 +103,21 @@ public class MainWindow extends JFrame {
 	    panel.revalidate();
 	    panel.repaint();
 	} else {
+	    //Otherwise, show an error message
 	    JOptionPane.showMessageDialog(this, errors);
 	}
     }
 
+    /**
+     * Update the Game Log
+     */
     public void updateGameLogPanel(String gameLogText) {
 	gameLogPanel.updateGameLog(gameLogText);
     }
     
+    /**
+     * Set up the image and add the help button
+     */
     private void setupImgPanel() {
 	imgPanel = new JPanel();
 	imgPanel.setLayout(new BoxLayout(imgPanel, BoxLayout.Y_AXIS));
@@ -115,6 +139,9 @@ public class MainWindow extends JFrame {
 	imgPanel.add(helpBPanel);
     }
     
+    /**
+     * Set up the help button, and assign it to open a new help window when clicked
+     */
     private void setupHelpB() {
 	helpB = new JButton("Help");
 
@@ -127,7 +154,10 @@ public class MainWindow extends JFrame {
 	    });
 	
     }
-
+    
+    /**
+     * Set up and add the quit Button, and assign it to quit the program when clicked
+     */
     private void setupButtonPanel() {
 	buttonPanel = new JPanel();
 	buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
